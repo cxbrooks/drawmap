@@ -1,0 +1,1118 @@
+.TH DRAWMAP 1 "Jul 10, 2008" \" -*- nroff -*-
+.SH NAME
+drawmap \- draw customized maps, using raw USGS data files
+.SH SYNOPSIS
+.B drawmap
+.RB [\-l\ latitude1,longitude1,latitude2,longitude2]\ [\-L]
+.br
+.RB [\-o\ output_file.sun]\ [\-d\ dem_file1\ [\-d\ dem_file2\ [...]]]
+.br
+.RB [\-c\ contour_interval_in_meters]
+.br
+.RB [\-C\ contour_interval_in_meters]
+.br
+.RB [\-g\ gnis_file]\ [\-a\ attribute_file]\ [\-x\ x_size]\ [\-y\ y_size]
+.br
+.RB [\-w]\ [\-n\ color_table_number]\ [\-r\ relief_factor]\ [\-z]
+.br
+.RB [\-i]\ [\-h]\ [\-t]\ [dlg_file1\ [dlg_file2\ [...]]]
+.SH VERSION
+This is the manual page for version 2.6 of drawmap.
+.SH DESCRIPTION
+.PP
+The U.S. Geological Survey, and other sources, support sites on the Internet with
+many gigabytes of raw geographic data, mostly for the USA.
+.I Drawmap
+draws maps, using a subset of the available data.
+The relevant subset includes:
+.TP
+.I "250K Digital Elevation Model (DEM) files"
+Each file covers a block, one-degree square, with a 1201 by 1201 grid of elevations (in meters).
+The extra sample in each direction is due to overlap of the DEM files at their edges.
+(Files for Alaska use smaller grids, with only 401 or 601 samples in the east-west direction.)
+For Hawaii and the "lower 48," the one-degree square is covered by elevation samples
+spaced 3 arc-seconds apart; and you will often hear these files called 3-arc-second
+files.
+In terms of distance along the ground, the sample spacing varies with latitude.
+It is generally less than 100 meters.  (The "250K" means that the data were digitized
+from a map at the scale of 1:250,000.)  Files of this type are currently available
+for free download from the USGS.
+.TP
+.I "24K Digital Elevation Model (DEM) files (in the 'classic' format or the SDTS format)"
+These files usually result from digitizing a "quad" map sheet.  (Each 1-degree
+block of latitude and longitude, covered by a 250K DEM file, is further subdivided into
+an 8-by-8 grid to produce smaller blocks called quads.)
+The number of samples in each direction varies, from quad to quad, but there is
+roughly one sample per second of arc.  These files differ from the 250K DEM files
+in that the samples are spaced a fixed number of meters apart rather than a fixed
+number of arc-seconds.  Because each quad represents an area that is 7.5 minutes
+of latitude by 7.5 minutes of longitude, you will also hear these files called
+7.5-minute DEMs.  The USGS provides 24K DEM data for free download, in
+the Spatial Data Transfer System (SDTS) format.
+Some files in the older format are available from other sources,
+and may be available for purchase from the USGS.
+.TP
+.I "100K Digital Line Graph (DLG) files (in the 'optional' format or the SDTS format)"
+These files come in collections, each of which covers a quarter of the one-degree
+square covered by a 250K DEM file.  The files contain information that allows segmented
+linear and polygonal features to be drawn on maps, including boundary lines,
+hydrographic features (streams, lakes, and so on),
+transportation features (roads, rail lines, pipelines, and so on),
+public land survey data, and hypsographic lines (the familiar contour lines of a topographic map).
+The different general classes of data come in separate files.
+Files of this type are currently available for free download from the USGS,
+in either the 'optional' format or the SDTS format.
+.TP
+.I "24K Digital Line Graph (DLG) files (in the 'optional' format or the SDTS format)"
+Like the 24K DEM files, each of these files covers a single quad.
+Except for their inherently greater detail, these files are essentially the same
+as the 100K DLG files.  As with the 24K DEM files, these files are freely available
+in SDTS format, but are harder to come by in the 'optional' format.
+.TP
+.I "GTOPO30 files"
+GTOPO30 files are similar to 250K DEM files, but with samples spaced 30 arc-seconds apart,
+and with a quite different format.  (For the purposes of this manual page, you
+can consider GTOPO30 files as just another variety of DEM files.)
+While these files have relatively low resolution, they have the virtue of providing
+full coverage for the entire planet.  Furthermore, they are
+currently available for free download.
+.TP
+.I "Geographic Names Information System (GNIS) files"
+These files are basically lists of place names, with the addition of latitude/longitude and other information.
+They are available for free download.
+.PP
+If a DEM or DLG file is one of the above types, and is from the USGS, there is a good chance that
+.I drawmap
+can use it.  However, given the range of available files, this is not a certainty.
+For example, the USGS used to distribute 100K DLG files in 'standard' format, with
+the characters 'std' as part of the file name.
+Neither the USGS nor
+.I drawmap
+support these files anymore, but you may still be able to obtain them.
+There is also a certain amount of variability in the format of USGS SDTS files, and
+.I drawmap
+may not be able to handle some of the variants, especially if I have never
+obtained a relevant sample file to test against.
+Files from non-USGS sources may also be usable.  However, people don't always
+strictly follow the relevant standards when they create DEM or DLG files,
+and the standards can sometimes be difficult to interpret, and
+.I drawmap
+isn't infinitely adaptable, so not all files can be processed.
+.PP
+Using the data in the various files,
+.I drawmap
+can produce various kinds of customized maps, including shaded relief maps (with or without roads, streams,
+place names, and so on) and topographic maps (again, with or without additional features).
+.PP
+The output is an image, in SUN rasterfile format, which can be viewed with your favorite
+image viewer, or converted to other forms for display or hard copy output.
+(My preferred viewing/converting packages are the "ImageMagick" package and the
+"xv" package.  However, I prefer them only in the sense that I have them on my system.
+I would imagine that other packages would be quite satisfactory as well.)
+.SH Map Projection Used by Drawmap
+.PP
+The only type of map projection currently supported is not technically a projection at all,
+but simply a grid of latitudes and longitudes.
+(The word "projection" is a mathematical term describing the "stretching" of the earth's
+roughly-spherical surface onto a flat map.)
+Over limited areas, this latitude/longitude grid approximates
+a family of projections called cylindrical projections.
+By default, the grid is square, in the sense that 1000 pixels in the latitude direction represent
+the same number of degrees as 1000 pixels in the longitude direction.
+You can make the grid non-square by playing with the "-x" and "-y" options.
+.P
+There are several reasons for using this approach.
+First, the 250K DEM data contain sample points that are evenly spaced in degrees
+of latitude and longitude, making a simple grid the natural choice.
+(Drawmap was originally written solely with 250K DEM data in mind.)
+Second, this is an intuitive projection for small-area maps.
+Over small areas, it approximates the Transverse Mercator projection,
+a cylindrical projection that is often used for topographic maps.
+Third, the USGS DLG data and 24K DEM data are
+specified in Universal Transverse Mercator (UTM) coordinates, which are based on
+a rectangular grid of x-y distances.  Over small areas, degrees of arc make a
+reasonable substitute for x-y distances, as long as the horizontal and vertical
+directions are appropriately scaled.
+And, finally, the latitude/longitude grid is also acceptable for large-scale maps.
+Since users of
+.I drawmap
+can produce maps covering any amount of
+territory, the latitude/longitude grid is a lowest-common-denominator that can
+handle any request.
+.SH Introduction to UTM
+.PP
+In order to find your way around the data, it is useful to know something about the UTM
+system, which is an international military standard that divides the world into 60 zones
+(like panels on a beach ball), each of which is
+6 degrees of longitude in width, and runs from 80 S to 84 N.
+A UTM projection, of a given zone, has a central meridian bisecting the map from top to bottom,
+which serves as a reference from which the locations of other features are derived.
+Zone 1 runs from 180W to 174W, with its central meridian at 177W.  Successive zones run to
+the east, with zone 2 beginning at 174W.
+.PP
+In the UTM system, the location of a feature is specified by its distance to the north of the equator, in
+meters, and its distance eastward from the central meridian, in meters plus 500,000.
+In the southern hemisphere, 10,000,000 is added to the distance north from the equator.
+(The purpose of the 500,000 and 10,000,000 offsets is to avoid having any negative distances.)
+.I Drawmap
+internally converts UTM distances into latitude/longitude coordinates before plotting features
+on a map.
+.PP
+Included with
+.I drawmap
+are two programs,
+.I utm2ll
+and
+.I ll2utm,
+that you can use to convert back and forth between UTM coordinates and latitude/longitude coordinates.
+You don't really need these to use
+.I drawmap,
+but they are useful in their own right.
+(Be sure to read the associated manual pages to get information on conversion accuracy.)
+.PP
+The result of the cylindrical projection is to map each one-degree by one-degree latitude/longitude
+patch (on the curved surface of the Earth) into a rectangular area (on the map projection).
+In the process, of course, the projection distorts shapes and areas
+as it stretches the beach-ball panels into flat rectangles;
+and these deviations get larger as the distances from the central meridian and equator increase.
+.PP
+Distortion may also occur due to the way the latitude lines are projected.
+In the classical Mercator projection, for example, the latitude lines are spaced farther and
+farther apart as they near the poles (reaching infinity at the poles themselves).
+This gives the map some useful directional properties,
+but grossly distorts shapes and areas near the poles.  (You can approximate this kind of stretching with
+.I drawmap
+by using the "-x" and "-y" options to vary the number of pixels per longitudinal or latitudinal degree;
+but remember that, within a
+.I drawmap
+map, latitude and longitude always vary linearly.)
+.PP
+It is a fact of life that mapping a sphere onto a flat piece of paper
+is going to produce distorted results.
+Various types of map projections are chosen for the ways they preserve one or more valuable
+features of a globe-shaped map (features like shape, area, distance, and direction).
+In the Transverse Mercator projection,
+the distortions are reasonable for points that are within several degrees of the central meridian,
+and for maps that aren't too near the poles.
+In fact, a cylindrical projection has the property that it is "conformal" in the mathematical
+sense, meaning that it preserves angles (and hence shapes and areas) within small areas of the resulting map.
+The classical Mercator projection is also conformal in the cartographic sense, meaning that it preserves
+angles everywhere on the map.  (In other words, if the great-circle route from Newark to Peoria is X degrees
+east-of-north on the globe, then a straight line from Newark to Peoria on a classical Mercator map is also at an
+angle of X degrees east-of-north.)  Of course, over large areas, the classical Mercator projection can
+grossly distort shapes and areas.
+.PP
+Since, with
+.I drawmap,
+you can define your own image boundaries, the output map may span any portion of one
+or more UTM zones, and zero or more central meridians may appear at arbitrary positions within the
+map boundaries.
+Over small areas, stretching latitude/longitude angles into a square grid (which is what
+.I drawmap
+does) produces roughly the same map image as a square grid of UTM coordinates would.
+Try to keep the map area smaller than a UTM zone, and center the map on a central
+meridian, if you want to use the map as a UTM surrogate.
+UTM coordinates are usually used for areas much smaller than a UTM zone, such
+as a 7.5-minute USGS quad.  For such small areas, the geometrical difference between
+latitude/longitude angles and surface distances is small.
+.SH Introduction to the Different File Types
+.PP
+At the time this manual page was updated (July, 2008), various DEM, DLG, and GNIS files
+were available for free download by following appropriate links from http://edc.usgs.gov/geodata/
+and http://geonames.usgs.gov/pls/gnispublic/ and http://geonames.usgs.gov/domestic/download_data.htm.
+For some files, convenient graphical interfaces were available to let
+you locate desired data by examining a map.
+Access to the various files changes over time, so you may have to do some searching to
+find what you want.
+.PP
+Ordinary DEM and DLG files (that is, non-SDTS and non-GTOPO30 DEM and DLG files)
+are in (gzip-compressed) ASCII text format,
+and are human readable (when uncompressed)
+except that they generally don't
+contain linefeeds to structure them into easily-editable lines of text.
+(Some newer DLG files do have linefeeds; and I have come across some DEM files with
+linefeeds also.)
+It is possible to add linefeeds for human viewing of the file contents, but
+.I drawmap
+is able to read and use the files in their native state (in
+.I gzip
+format, with a ".gz" suffix on the file name).
+.I Drawmap
+can also process the files in uncompressed form.  It is okay to have linefeeds in ordinary DLG files, as
+long as no line is longer than 80 bytes (including the linefeed); and
+it is okay to have linefeeds in ordinary DEM files, as long as no line is longer than 1024 bytes (including
+the linefeed).
+The
+.I drawmap
+distribution contains the
+.I block_dlg
+and
+.I block_dem
+programs to add appropriate linefeeds
+to DLG and DEM files but, beyond that, you are on your own if you want to muck around
+inside the files.
+.PP
+In general, you can add or remove records to or from a DLG or GNIS file, as long as you
+don't violate the record structure.  For example, I have added linefeeds to a DLG file (using the
+.I block_dlg
+program), deleted a record, added a record, and then used
+.I drawmap
+to process the file.
+If you want to do this sort of thing, then you may also want to get copies of the various
+guides and standards for the different kinds of files.  These documents are available
+through the web sites.
+.PP
+Using SDTS files is a bit more complicated.  SDTS data generally come in the form of
+.I tar
+archives, compressed with
+.I gzip.
+Each such archive should be unpacked into a separate directory.  This is
+true even if there are several archives in a single directory on the download
+site.  (Transportation archives, for example, normally come in triples --- one
+each for roads, railroads, and other transportation features.  These triple archives
+should be unpacked into three different directories to avoid files from one archive
+overwriting files from another.)
+.P
+When you provide SDTS files as input to
+.I drawmap,
+you don't have to include all of the unpacked files on the command line.
+For DEM files, each archive should contain one or more files with names like
+????CEL@.DDF, where the '?' symbol stands for any single character, and the '@'
+symbol stands for any single digit.
+Use one or more of these file names (each preceded by "-d")
+just as you would an old-style DEM file name, and
+.I drawmap
+will figure out the names of the other files in the archive.
+.PP
+For DLG files, each archive should contain one or more files with names like
+????LE@@.DDF.  Use one or more of these file names just as you would an optional-format
+DLG file name.
+There is also a Master Data Dictionary available for each kind of DLG file.
+At present,
+.I drawmap
+makes no use of these.
+.PP
+Once you have unpacked the archives, you can compress the individual files
+with
+.I gzip
+if you wish.  If you do compress them, compress every file that has a ".DDF" extension.
+You can also change the file names to all lower case, but don't
+mix and match upper and lower case files.
+Other than changing upper to lower case, DO NOT change the file names.
+.I Drawmap
+uses the file names to deduce what to do.
+.PP
+The GTOPO30 files also come in archives, and must be unpacked
+before use.  (You don't need to unpack each archive into a separate directory,
+but it isn't a bad idea.)  Once they are unpacked, you can compress the individual files
+if you wish, as long as you compress both the ".HDR" file and the ".DEM" file,
+which are the only files that
+.I drawmap
+uses.  (The same guidelines apply as for SDTS files:  try to be consistent
+with upper/lower case, compression, and the like.)
+.P
+There is one GTOPO30 archive that contains a Polar Stereographic projection of Antarctica.
+.I Drawmap
+can't handle that one.
+On the FTP site, there is also a gtopo30hydro directory.  The files in this directory are
+derived from GTOPO30 data, but use a Lambert Azimuthal Equal Area projection.
+.I Drawmap
+does not currently handle these either.
+.PP
+To use GTOPO30 files, simply invoke the "-d" option, and provide as a parameter the file
+whose name ends in ".HDR" (or ".HDR.gz" if you compressed the individual files).
+Use caution with GTOPO30 data.  Each data set spans a large area,
+and the memory needed to read it all in can be enormous.  You can limit the
+amount of memory required by using the "-l" option to restrict the range of the
+image to a subset of the available GTOPO30 data.
+.PP
+Be careful with downloads.  Some download software will uncompress gzip files during a download but still store the
+files with a ".gz" suffix.  Other download software will leave the data compressed, but remove
+the ".gz" suffix.
+.I Drawmap
+will become confused when this happens.  It relies on the suffix to determine the file type.
+.SH Drawmap Tidbits
+.PP
+If you provide all three types of data (DEM, DLG, and GNIS) as input, then
+.I drawmap
+will first produce a shaded relief map (or, when "-c" or "-C" is specified, a contour map),
+and then overlay it with data from the DLG files
+(with the data from each DLG file, in succession, being overlaid on all previous data), and
+then overlay everything with place names from the GNIS file.
+If you omit the DEM data, then the shaded relief (or contouring) is replaced by a simple white background.
+.PP
+.I Drawmap
+will take whatever information you provide and assemble a map containing
+just that information.
+If you provide information that falls outside of your specified map boundaries,
+it is simply ignored.
+If you supply any DEM data, and if you don't specify a contour map (via the "-c" or "-C" option),
+and if there is room, a color key will be placed at the
+bottom of the map to help you interpret the shaded relief.
+If you specify the "-c" or "-C" option, then a message about the contour interval will appear
+at the bottom of the map, if there is room.
+.PP
+Also, if there is room, a title will be placed at the top, containing the lowest and highest
+values of longitude and latitude for this map, and containing the latitude, longitude, and elevation of
+the points on the map of lowest and highest elevation.
+(Actually, of course, there may be multiple points on the map that attain
+the lowest or highest elevation, but
+.I drawmap
+shows only the first ones that it finds.
+Furthermore, for low-resolution output images, that have small
+x and y pixel dimensions relative to the granularity of the available DEM data,
+.I drawmap
+may be a little sloppy about the exact latitude and longitude,
+and about the exact maximum and minimum elevations.)
+If only one DEM file is supplied, the location name from the DEM file header will be included in
+the title.
+(Sometimes, it is hard to figure out exactly what the correct name is, so don't be
+surprised if the title looks a bit strange.)
+.PP
+Latitude and longitude tick marks will be placed around the map boundaries, with one
+tick every tenth of a degree.  Tick marks at full degrees and half degrees will be larger
+and (if there is room) will have text next to them that specifies the latitude/longitude.
+Tick marks can be turned off with the "-t" option.
+.PP
+North is always at the top of the map, and east is always at the right.
+.SH OPTIONS
+.TP
+.B \-l latitude_low,longitude_low,latitude_high,longitude_high
+You usually must provide latitude and longitude coordinates that define two diagonal corners
+of the image.  They must be separated by a comma or other non-space character
+(as in:  -l 34.3,-109,35.9,-109.713),
+and they must be in decimal degrees.
+Note that east longitude is positive and west longitude is negative.
+Similarly, north latitude is positive and south latitude is negative.
+If you only provide one "-d dem_file" option, then you can omit the "-l", and
+the corners of the single DEM file will be used to define the map boundaries.
+This is useful when you are simply trying to figure out what area a given DEM
+file covers.
+.TP
+.B \-L
+Print out the program license information and exit.
+.TP
+.B \-o output_file.sun
+You may provide an output file name.  It can be any name that you choose.
+By convention, SUN rasterfile images have a ".sun" file name extension,
+but you can omit it if you wish.
+If you provide no name, then "drawmap.sun" is used.
+(If you use the "-h" option, and provide no name, then "drawmap.pgm" is used.)
+.TP
+.B \-d dem_file
+You can provide as many DEM files as you want.  (There is a hard-coded limit of
+1000 files in the source code, but it is easily changed.)  Since each file covers a limited
+area, it can take quite a few to cover the image if you specify a
+large latitude/longitude range for the image boundaries.
+
+You don't, of course, have to provide enough files to cover the whole
+map area.  Areas not covered by a DEM file will simply have a white background.
+If you have selected the "-c" or "-C" option, there will be anomalous contour lines along
+the edges of these white areas.  If you are using 24K DEM data, there may also
+be anomalous contour lines around the outer boundaries of the map.
+
+The DEM files will be processed into multicolored shaded relief (or contour lines), serving
+as a background for any other features you add to the map.
+If you are trying to draw a contour map using hypsographic data from DLG files
+(as opposed to drawing a contour map using the "-c" or "-C" option, along with data from DEM files),
+then you probably don't want to provide any DEM files.  The DEM data would
+mix with the DLG contour lines to produce a confusing morass.
+
+Note that files are processed in the order given.  Thus, if you want to provide
+a 250K DEM file, and overlay parts of it with one or more 24K DEM files,
+then you want to have the 250K DEM file first in the argument list.
+This overlays the high-resolution data over top of the low-resolution data.
+Furthermore, the decision of whether or not to smooth the final image is
+made based on the last DEM file processed.  It is usually desirable to
+base this decision on the highest-resolution data present.
+.TP
+.B \-c contour_interval_in_meters
+This option has no effect unless you provide one or more DEM files.
+The DEM files are normally processed into multicolored shaded relief.
+If you include the "-c" option, then the shaded relief is replaced by
+a set of contour lines (orange lines on a white background)
+that represent elevations separated by the
+given contour interval (in meters).
+Note that it is also possible to generate contour lines by using
+data in hypsographic DLG files, making the "-c" option seem somewhat redundant.
+However, at the present time, the area covered by the available DEM files
+is a superset of the area covered by hypsographic DLG files.
+Furthermore, the "-c" option allows finer control over the spacing of contour
+lines than is available with hypsographic DLG data.  On the other hand,
+the DLG data is likely to be more precise about the locations of contours.
+.TP
+.B \-C contour_interval_in_meters
+This option is exactly the same as the "-c" option, except that it doesn't
+use a white background.  Instead, it fills in the areas between the orange
+contour lines using a rotating set of solid colors.  These distinct colors
+make it easier to follow elevation contours as they swirl around the map.
+(The colors come from the same set used to generate shaded relief, except
+that white is excluded because it tends to stand out too much from the
+other colors.)
+.TP
+.B \-g gnis_file
+Only one GNIS file is allowed.  This is not really a restriction since you
+can edit these files with an ordinary text editor, making them contain
+whatever place names you want to include.
+In fact, it is normally necessary to winnow out much of the available GNIS data;
+otherwise the map would be plastered nearly solid with place names.
+
+The GNIS data generally come in separate files, one for each US state.
+Files can be in one of two different formats:  a fixed-field-width format in which
+fields are padded out with white space, and a tokenized format in which
+the fields are separated by the delimiter "','".
+You can mix together records from both formats in your customized GNIS file.
+
+WARNING:  The format of both kinds of GNIS files has changed; and
+.I drawmap
+will not properly process the older files.  If place names don't
+show up on your maps, then you may need to download newer GNIS files.
+The newer files have records that begin with a postal code, like NJ, NY,
+or WY.
+
+The
+.I llsearch
+program (included in the
+.I drawmap
+package) allows you to extract all place names within a certain range
+of latitudes and longitudes.
+You can manually edit the resulting extracted data and make further reductions.
+Each GNIS entry has a field that denotes its type, such as "ppl" for
+a populated place and "summit" for a mountain top.  These fields can help
+you to narrow down your choices.
+
+The place names are added to the image on top of any other features that
+you choose to include.  A small "+" sign denotes the actual location of
+the feature.
+.TP
+.B \-a attribute_file
+There are three high-level types of objects in a DLG file:  Nodes (points where lines
+join), Areas, and Lines.
+These objects often have attribute codes associated with them.
+Each attribute code consists of a major code and a minor code.
+The major code denotes a particular general type of feature, such as 50 for hydrographic features.
+The minor code denotes a subtype, such as 412 for a stream, or 421 for a lake or pond.
+
+You can provide an attribute file to control what DLG information is
+included in the image.
+Each line in the file consists of a letter 'N', 'A', or 'L' (for Node, Area, or Line), followed by
+a pair of numbers to denote the major and minor codes, followed by any comments you choose to add.
+The fields should be separated by white space.
+Lines that begin with '#', or white space, are ignored.
+
+A negative number, for either the major or minor code, matches anything.  Thus, an attribute specification of
+"L -1 -1" will draw all lines in the DLG files, whether they have associated attribute codes or not.
+(Omitting the attribute file, or providing the "L -1 -1" attribute specification,
+ensures that every possible line is drawn, except for the "neatlines" that form a rectangle
+around the boundaries of the data from each DLG file.)
+If only the minor code is negative, then all lines of a given major type are drawn.
+(For example, an attribute specification of "L 050 -1" will match all hydrographic features.)
+
+At present,
+.I drawmap
+makes no use of Node data from the DLG file(s).
+Thus, there is no need for any "N" entries in the attribute file.
+
+If no attribute file is given,
+.I drawmap
+will ignore the Area data from the DLG file.
+If Area attributes are specified in an attribute file, then
+.I drawmap
+will attempt to fill the specified types of areas with the same color as the boundary lines that surround them.
+
+The chief use for this is to fill in lakes, reservoirs, and the like.
+However, because the area-filling algorithm is currently not very robust,
+and because the Area data in the DLG file can be somewhat ambiguous, it
+is possible for the outside of an area to be filled in instead of the inside.
+(I have had this happen often in practice, especially when stretching a map in one direction by
+specifying unusual map dimensions with the "-x" and "-y" options.)
+This potential problem is the reason why areas are not filled in unless you make an explicit
+request in an attribute file.
+
+Another common problem is that sometimes lakes or rivers will be only partially filled in.
+The reasons for this are beyond the scope of this manual page, but are discussed in
+comments in the
+.I drawmap
+source code.
+One solution to both of these problems is to not have
+.I drawmap
+fill any areas.  Instead, fill in the areas yourself using an image editor.
+
+The distribution for
+.I drawmap
+includes a file, called "attrib_codes," which is pulled from a USGS
+guide, and describes various major and minor codes.  The distribution also
+contains a sample attribute file, called "attributes."
+The sample attribute file contains Area attribute specifications that will
+cause lakes, ponds, streams, and reservoirs to be filled in.
+(Both of these files are probably somewhat dated.  More current information can
+be obtained by downloading the appropriate standards documents from the
+USGS.)
+
+Precious little error checking is done on the data in the attribute file, so be
+careful.
+
+There is a debugging feature associated with the attribute file.
+If you specify a major code of 10000, and a minor code of your choosing,
+then the minor code is taken to be a specific node, area, or line identifier.
+(Within each node, area, or line record in a DLG file, the first integer
+in the record is an identifier for the node, area, or line.  In general
+the nodes, areas, and lines are numbered sequentially,
+starting at 1.)
+
+By specifying Area or Line attributes with major codes set to 10000,
+you can draw individual areas or lines from a DLG file.
+This can be useful when you are trying to fine-tune a map or find the
+source of some problem.
+When using this feature, it is probably not a good idea
+to include more than one DLG file in the input arguments.
+This is because the Node, Area, and Line identifiers are unique within
+individual files but are re-used from file to file.
+Thus, if you specify multiple DLG files, you may have a hard time figuring out
+which file is the source of each area or line on the output map.
+
+Roads and trails show up in red, pipelines and railroads in black,
+hydrographic features in blue, hypsographic data in orange,
+boundaries in gray, vegetative features in green, and other data in black.
+.TP
+.B \-x x_size and \-y y_size
+The horizontal and vertical dimensions of the map, in picture elements (pixels),
+can be specified via the x and y options.
+You can supply either or both of them.  If you don't provide them, they will be
+selected so that 250K DEM data can be displayed at one half of full resolution.
+
+As a special case, if you give only a single DEM file, and don't use the 
+"-l", "-x", or "-y" options,
+.I drawmap
+will automatically produce a complete map at full resolution.
+
+For most 250K DEM files, full resolution is 1200 pixels per degree of longitude or latitude,
+but it is 400 or 600 pixels per degree of longitude for Alaskan files.  The full resolution of
+GTOPO30 files is 120 pixels per degree.
+For 24K DEM files, resolution is more complicated.
+The data in these files are sampled on a uniform UTM grid instead of on a
+latitude/longitude grid, and the elevations may be sampled at spacings of
+10 or 30 meters, and the number of samples varies with latitude.
+Thus, the resolution (in terms of latitude and longitude) can vary considerably from
+file to file.  I use 3600 pixels per degree as a very rough rule of thumb.
+It is a reasonable approximation for files (with 30-meter spacing) in equatorial
+regions, but becomes considerably less accurate as one moves north or south.
+I like this particular number because it is exactly equal to the number
+of arc-seconds in a degree.
+
+It is generally desirable to specify small x and y values, when you are first trying to fine
+tune your map, because (at full resolution) even a single one-degree block covers a 1200 by 1200 image,
+which is larger than many display screens.
+
+Note that the x and y values define the boundaries of the actual map area, but
+do not define the size of the output image.
+.I Drawmap
+also adds a white border around the image, which makes the output image
+a bit larger than the x and y values would otherwise imply.
+
+Note also, that it is best to choose x and y values that are some integer multiple
+or sub-multiple of the resolution of the DEM data.  For 250K DEM data, the resolution
+"1200 times the width and height of the image in degrees of
+longitude and latitude."  For example, if the image is to cover an area that is 0.1
+degree square, then the automatically-chosen value for x and y is 60, and full
+resolution would require x and y to be set to 120.
+If you want to specify your own dimensions with "-x" and "-y", then it is best to choose
+an integer multiple or sub-multiple of the full resolution of 120.
+Choices, in this case, might include 30, 120, 240, and so on.
+If you choose strange values for x and y, then the program may produce shaded
+relief that contains odd-looking linear artifacts.
+If you aren't providing DEM data, then you don't need to worry about this constraint.
+
+Similar comments apply to DEM files for Alaska, except that full resolution
+is 400 or 600 pixels per degree of longitude.
+GTOPO30 files are also similar to 250K DEM files, but their full resolution is
+ten times smaller.
+
+The situation for 24K DEM files is more complicated, since they aren't perfectly
+rectangular.  You may have to try a few different "-x" and "-y" values until
+you get good results.  One starting point is to provide a single 24K DEM file,
+without using the "-l", "-x", or "-y" options.
+.I Drawmap
+will display the image in full resolution, and will tell you what x and y values
+it picks.  (Alternatively, you can use the "-i" option to print out some
+information about the DEM file, including its extent in both the x and y
+directions.)  You can use this information to derive approximate x and y values
+for maps that contain multiple 24K DEM files.  However, because of the odd
+shapes of the 24K quads, you may still have to "twiddle" your derived values
+for the best results.
+
+Be careful about choosing x and y values that are near, but not
+equal to, the full resolution of the data.  Under these conditions,
+.I drawmap
+has a hard time
+transferring the data to the image without creating some image blemishes.
+As an example, if the DEM data has
+a resolution of 1200 elevations per degree, then an x or y value of
+1190 or 1210 would not be the best choice.  These values for x or y would be
+likely to result in a checkerboard effect in areas where the elevation changes
+slowly.
+
+Note that, when the resolution of the source data doesn't match the resolution
+of the desired image,
+.I drawmap
+may silently apply a filter to the source data, or to the output image, to blur
+things out somewhat.  This can improve the appearance of the completed map.
+When the resolutions are about the same, no filtering is done, because I
+prefer isolated image blemishes to non-localized blurring of the map.
+.TP
+.B \-w
+The DLG files describe bodies of water within land areas.  However, they don't
+generally provide polygonal areas to define sea-level water in coastal areas.
+When you use the "-w" option,
+.I drawmap
+will attempt to make ocean areas bright blue, just like the inland waterways.
+This feature is provided as an option, rather than as the default, because it
+sometimes produces odd results.  For example, some DEM data in the
+Sacramento, CA, area give elevations below sea level.  With the "-w" option,
+the map ends up with anomalous-looking sub-sea areas surrounded by water.
+(This representation may, in fact, be correct.  The areas may be polders,
+pumped out for farming purposes.  I don't know.  But they look odd.)
+.TP
+.B \-n color_table_number
+.I Drawmap
+provides a choice of four color schemes for shaded relief.
+The default is color table 2, which provides a natural-looking color scheme.
+Using the "-n" option, you can instead choose color table 1, a very-neutral non-obtrusive
+scheme; color table 3, a natural-looking but garish scheme reminiscent of
+maps in school textbooks; or color table 4, a very garish scheme designed to provide good
+perception of variations in elevation.
+From 1 to 4, the tables are ranked in order of increasing obtrusiveness.
+
+Note that the natural scheme isn't perfect.  What looks natural for seacoast plains and
+mountains may not look as good for highland plains and mountains.  The selected
+color scheme is a compromise.  If you are adventurous, you can modify the software
+to provide additional color tables of your own devising.  The software is
+specifically designed to make such modifications reasonably painless, as long as you are
+familiar with the 'C' programming language.
+
+For elevations below sea level, drawmap simply re-uses one of the colors
+used above sea level.  A grayish or blueish color is selected, if possible.
+The reason for the re-use is that sub-sea-level areas are rare, and
+color table space is a scarce commodity.
+.TP
+.B \-r relief_factor
+Normally, when drawing shaded relief,
+.I drawmap
+manipulates the colors in the color table so as to
+provide maximum sharpness in the relief.
+In other words, the shading varies from full brightness all
+the way to black.
+
+You can use the "-r" option to change this behavior.  A relief_factor
+of 1.0 duplicates the default behavior, and is the same as providing
+no "-r" option at all.  A relief_factor of 0.5 causes the colors to
+shade from full brightness down to half brightness.  A relief_factor
+of 0.0 yields full-brightness color bands, with no shaded relief at all.
+(The "-r" option has no effect when you are requesting contours with
+the "-c" or "-C" option.)
+
+You can provide any relief_factor you want, as long as it falls in the range
+from 0.0 through 1.0.
+However, keep in mind that the color tables are not infinitely adjustable.
+As you vary the relief_factor from 0 through 1, the color scheme will
+change, at most, eighteen times.  Thus, it is pointless to provide lots of
+digits of precision in the relief_factor.
+
+One use of this feature is to provide faint shaded relief, as a background
+for data you consider more important (such as roads on a road map).
+For this application, you might choose color table 1 or 2, with a relief_factor of 0.1.
+.TP
+.B \-m relief_magnification
+Some regions of the world are relatively flat, with only minor relief.
+In such regions, it may be desirable to make the relief stand out more
+sharply.  The "-m" option allows you to supply a magnification factor
+that enhances elevation differences.  The factor must be greater than
+or equal to 1.0, and the default value is 1.0.
+(The "-m" option has no effect when you are requesting contours with
+the "-c" or "-C" option.)
+
+In order to use this feature, it is useful to know a little about how
+shaded relief is generated.  We begin by assuming that the sun is
+shining from the northwest, so that slopes facing to the north or west
+will be more brightly lit than slopes facing south or east.
+At any given point on the map, we first note the exact elevation of the point.
+This information is used to select the overall color at that point,
+such as green, yellow, red, brown, and so on.
+We then find the difference in elevation between
+the given point and a couple of nearby points.
+These results are used to make a
+rough estimate of the direction the land is sloping at the given point.
+This estimate is then used to modulate the light/dark shading of the
+point to reflect the degree to which the point is in sun or in shade.
+The actual degree of light/dark shading is the result of a hand-tuned
+algorithm, developed largely through trial and error.
+
+When you provide a magnification factor, the height differences
+(between the given point and its neighbors) are multiplied by the given factor.
+Thus, if a given height difference is Z meters, and the magnification factor
+is 2, the shading is done as if the height difference were 2Z meters.
+This may result in a somewhat brighter highlight, or a somewhat deeper shadow,
+or no noticeable change, depending on the direction that the land is sloping.
+Note that the actual elevation of the point is not modified.
+Thus, if the elevation
+calls for the point to be green, it will remain green no matter how
+large a magnification factor you provide.  The only impact of the "-m"
+option is to modify the light/dark shading at each point.
+
+Don't expect amazing results.  The shading calculations are not linearly
+related to height differences, so the magnification factor has
+only a limited effect.
+To maximize perception of height differences,
+you might want to try the "-z" option, with or without the "-m" option.
+Remember too that
+.I drawmap's
+shading is only a crude simulation of the light and shadow of real relief.
+If you want more realistic shading, you might want to use the "-h" option
+to generate a file of elevation data, which can be imported into a ray-tracing
+program to produce a more realistic three-dimensional appearance.
+.TP
+.B \-z
+When the given DEM data span a small range of elevations, shaded relief
+uses only a small portion of the color table.
+In fact, if the range of elevations is small enough, the entire
+map may end up using only a single color, with whatever
+light/dark shading is called for by the limited roughness of the terrain.
+This results in a pretty boring map.
+
+For these situations,
+.I drawmap
+provides the "-z" option, which specifies that the entire range of
+available colors be used to represent the given terrain.
+For example, assume that the data only contain elevations between
+4567 feet and 5799 feet.  Normally (depending on the chosen color table),
+the color "green" might represent elevations from 0 feet to 1000 feet,
+and thus no green would appear in the map.
+With the "-z" option, however, green will instead represent
+elevations from 4567 feet to 4655 feet, and will show up in the low-lying
+areas of the map.  All of the other available colors will also show up,
+each representing its proportion of the elevation range.
+(The "-z" option has no effect when you are requesting contours with
+the "-c" or "-C" option.)
+.TP
+.B \-i
+When you provide this option, drawmap doesn't produce a map.
+Instead it prints out some useful information about all of the DEM and DLG
+files that you specify on the command line.
+
+For a DEM file, the information includes:  the file name, the DEM name, the latitude/longitude
+of the southeast and northwest corners, the minimum and maximum elevation, the number of samples
+in the x and y directions, and an indication of whether or not the file contains linefeeds.
+
+For a DLG file, the information includes:  the file name, the DLG name, the postal codes touched
+by the file (e.g. MT, TX, RI), the type of data present in the file,
+the latitude/longitude of the southeast and northwest corners,
+and an indication of whether or not the file contains linefeeds.
+
+.I Drawmap
+may not always be able to find the postal codes in a DLG file, so don't
+be upset if the field is blank.
+In DEM files, the DEM name may contain some postal-code information, but not always.
+SDTS files aren't human-readable, so their linefeed information is omitted.
+
+When the "-i" option appears, all other options are ignored except the "-d" option.
+.TP
+.B \-h
+When you provide this option,
+.I drawmap
+doesn't produce a map.
+Instead it takes the DEM information and produces a height-field
+file, in Portable Graymap (PGM) format.  The file is readable ASCII,
+beginning with the line "P5", which identifies the file as a PGM file.
+The next line contains the x and y dimensions (separated by white space),
+and third line contains the maximum elevation of all elevations in the file.
+Then the file includes all of the elevation samples, one per line, beginning
+with the top west-to-east row, and followed by all of the other rows in sequence.
+Finally, there are some commentary lines containing information about the data,
+including the latitude/longitude of the southeast and northwest corners,
+and the minimum and maximum elevations.
+
+This file is suitable for use by ray tracing programs
+(such as the readily-available
+.I POV-Ray(tm)
+program) to produce 3-dimensional renderings of terrain.
+(It is also viewable by some image viewers, such as the "xv" viewer, and
+can be used as input to custom-built programs that process elevation data.)
+
+Unless you select a file
+name, with the "-o" option, the file will be called "drawmap.pgm".
+
+Any elevations less than zero are bumped up to zero, and any areas of the
+image that contain no DEM data have their elevations set to zero.
+(In the latter case, the points are not included when determining the
+minimum elevation in the file.  In the former case, the minimum elevation
+will be zero.)
+
+.I Drawmap
+will also generate a file called "drawmap.pov".  This file is a rough
+attempt at a
+.I POV-Ray
+(version 3) file which, together with the PGM file,
+can be used to produce a rendering of the 3-dimensional terrain.
+The file will probably require manual
+editing to get things the way you want them, but it is at least a start.
+There are some minimal instructions, embedded in the file as comments,
+but you are assumed to be familiar with
+.I POV-Ray
+before you use the "-h" option.
+.TP
+.B \-t
+Normally,
+.I drawmap
+will put tick marks and latitude/longitude numbers around the borders of the map.
+However, for maps that span large regions of the earth, these tick marks and numbers
+can overlap and interfere with one another.
+.I Drawmap
+makes a limited attempt (with emphasis on the word "limited")
+to reduce the density of the markings as the map area increases.
+Rather than try to adapt to any situation, though, I chose to provide
+the "-t" option, which totally shuts off production of tick marks and latitude/longitude
+legends.  It is for use in situations where the border markings become cumbersome.
+.TP
+.B dlg_file
+Any argument that doesn't match any of the above options is assumed to be a DLG file.
+You can add as many as you like.
+Note that files are processed in the order given, and each file is overlaid by the
+ones that come after it.
+Thus, you generally want to put "transportation" files after "hydrography" files,
+so that roads will be shown as crossing over streams instead of the other way
+around.
+.SH EXAMPLES
+To generate a simple shaded relief map for a portion of the southern California coast,
+with the size of the map set to a reduced resolution of 300x300 pixels (full
+resolution would be 1200x1200):
+.PP
+drawmap -d santa_ana-w.gz -l 33,-117,34,-118 -x 300 -y 300
+.PP
+To extract the upper right quadrant of the above map, and display it at full resolution:
+.PP
+drawmap -d santa_ana-w.gz -l 33.5,-117,34,-117.5 -x 600
+        -y 600
+.PP
+To add in some place names from a GNIS file (that you have prepared in advance, using llsearch):
+.PP
+drawmap -g gnis_santa_ana_west -d santa_ana-w.gz
+        -l 33.5,-117,34,-117.5 -x 600 -y 600
+.PP
+To add in some DLG files for hydrography:
+.PP
+drawmap -g gnis_santa_ana_west -d santa_ana-w.gz
+        -l 33.5,-117,34,-117.5 -x 600 -y 600
+        santa_ana-e_CA/hydrography/522274.HY.opt.gz
+        santa_ana-e_CA/hydrography/522275.HY.opt.gz
+        santa_ana-e_CA/hydrography/522276.HY.opt.gz
+        santa_ana-e_CA/hydrography/522279.HY.opt.gz
+.PP
+To draw a map of western Europe, using GTOPO30 data, first
+download the w020n90.tar.gz and w020n40.tar.gz archives,
+and unpack them by typing:
+.PP
+gunzip -c w020n90.tar.gz | tar xf -
+.PP
+gunzip -c w020n40.tar.gz | tar xf -
+.PP
+Then draw a map by typing:
+.PP
+drawmap -t -x900 -y1200 -w -l30,20,70,-10 -d W020N90.HDR
+        -d W020N40.HDR
+.SH LIMITS
+As distributed,
+.I drawmap
+is limited to 1000 DEM files, one GNIS file, and one attribute file.
+The DEM limit is easily changed in the code.
+As explained above, the GNIS limitation is not really a limitation, since you can
+concatenate as many GNIS records as you want into a single file.
+I'm not sure how to implement multiple attribute files, or even what they would
+be used for.
+The number of DLG files is only limited by your system's limits on command-line length.
+.PP
+Another limitation arises from the fact that
+.I drawmap
+must be able to read all of the input data into memory.  If you want to produce
+large maps, then you must have large memory.
+.PP
+When dealing with 24K DEM data, there will often be visible seams
+between the data from different files.  There are several reasons for this.
+First, there can be marked differences in data quality between files.
+Lower quality data can have a lot of anomalous "fuzz", which forms
+discontinuities with adjacent data of higher quality.
+Even if one ignores other sources of discontinuity between data blocks,
+the visual difference between the two quality levels can be quite obvious.
+.PP
+Second, the calculations used to map raw data into the image
+may produce discontinuities, because numeric rounding
+may pull a data point one way, at the edge of one
+block of data, and may push an adjacent data point the other way,
+at the edge of the adjacent block of data.
+.PP
+Third, it goes without saying that there may be residual bugs in
+the code that handles the DEM files.
+.PP
+Finally, there may be flaws in the data itself.
+For example, some 24K SDTS DEM files, produced before January 2001, are
+known to have small positional errors.  (The non-SDTS DEM files don't
+suffer from this problem.)
+.PP
+Similar seams may appear between blocks of GTOPO30 data, but aren't
+usually as obtrusive.
+.PP
+There is another issue involving 24K DEM data.
+Each 24K quad represents a latitude/longitude square, with
+one eighth of a degree on each side.
+However, the native coordinate system for 24K DEM quads is a UTM grid.
+In UTM coordinates, the latitude/longitude square becomes an approximate quadrilateral,
+which often has no two sides of the same length.  The four sides of the
+quad will usually be tilted at slight angles to the UTM axes.  It is this odd-shaped
+quad that is stored in a 24K DEM file, as a set of elevation samples that are
+evenly-spaced in UTM coordinates.  (The spacing is normally 10 meters or 30 meters.)
+Different columns of sample points may contain different numbers of samples,
+depending on where the columns intersect the slanting sides of the quad.
+.PP
+An evenly-spaced collection of UTM points does not map onto an evenly-spaced
+set of latitude/longitude points.
+In order to map the UTM data onto a latitude/longitude grid,
+.I drawmap
+must warp the points into new relative positions, turning the
+unevenly-shaped UTM quadrilateral into a latitude/longitude square.
+(You might picture this by imagining an odd-shaped quad, which is
+cut out of a rubber sheet and covered with a uniform grid of dots,
+and which is then stretched into a perfect square.)
+During this warping process, rounding quantization can produce some diagonal
+artifacts in the map image.
+(We could sidestep this issue by making
+.I drawmap
+produce maps using an optional UTM grid, rather than always using a
+latitude/longitude grid.  However,
+.I drawmap
+is not presently so endowed.)
+.PP
+Rounding quantization may also sometimes produce anomalous vertical and
+horizontal linear features on the map, in the form of small discontinuities in
+the changing elevation.  This can happen for data of any level of detail;
+and is a result of trying, for example, to stretch a 100-by-100 grid of
+data points to cover a 101-by-101 grid of image pixels.  The data don't
+quite fit, and something, somewhere, has to give.
+.PP
+Whether artifacts are horizontal, vertical, or diagonal, their incidence
+can sometimes be reduced by adjusting the values of the "x" and "y"
+image dimensions.
+However, while this is usually straightforward for 250K DEM or GTOPO30 data,
+it can be a challenge for 24K DEM data.
+This is because, while
+.I drawmap
+can tell you the height and width, in UTM samples, for the raw 24K DEM
+data, it doesn't know how to figure out an optimal width and height
+after the data are warped onto a latitude/longitude grid.
+Furthermore, when you provide more than one 24K DEM file, there is
+no truly optimal width and height for the image, because
+the quadrangle covered by each file has a slightly different shape from
+the quadrangles adjoining it.  What works well for one quad may
+not be the best for another.
+I don't have a general rule of thumb for adjusting the width and height.
+I usually just try a few minor tweaks, to the "x" and "y" values, and pick
+the one I like the best.
+.PP
+Faced with various possible image artifacts,
+.I drawmap
+tries to smooth things out, but faces a trade-off between making the image
+look good (and blurring some of the good data), or
+leaving the good data unaltered (resulting in some esthetic imperfections).
+.I Drawmap
+tends to err on the side of leaving good data untouched at the expense of
+leaving some artifacts in isolated spots on the image.
+It tries hardest to preserve the pristine data when the map image dimensions
+are approximately the same as the resolution of the raw data.  This is
+because, in such cases, there is approximately a one-to-one mapping between
+the raw data and pixels in the image.  It seems useful to preserve this
+correspondence, and not to blur it with smoothing algorithms.
+.PP
+When you specify image dimensions that differ considerably from the resolution
+of the data,
+.I drawmap
+takes more liberties in its attempt to produce pleasing results.
+If the map resolution is greater than the resolution of the data, then
+.I drawmap
+must replicate data points in order to fill up the map.  It does some smoothing
+on the finished image to reduce the resulting "checkerboard" effect.
+If the data have considerably greater resolution than the map image, then
+.I drawmap
+has more data than it needs, so it
+averages adjacent data points to determine each elevation in the map.
+Thus, one alternative for reducing image artifacts is to produce a map at,
+say, half resolution.
+If, for example, a 24K DEM file has a 300-by-400 sample grid,
+then you might try drawing a map with "x" set to 150 and "y" set to
+200.  The averaging operation will then smooth the data, which
+will usually reduce image artifacts.
+.PP
+If you are using the "-c" or "-C" option, and the given DEM files do not fully cover
+the image, there may be anomalous contour lines along the borders of the valid data.
+(This happens when you fail to completely tile the image with DEM files.)
+This problem is a result of the way the contours are produced.  It may get fixed
+some day, but isn't a high priority since it is usually hard to mistake these
+anomalies for valid data.
+.PP
+The code that reads SDTS files is not a complete implementation of all of the
+relevant standards involved in SDTS.
+In particular, SDTS relies on the ISO 8211 standard, and it would not
+be at all difficult to construct a valid ISO 8211 file that
+.I drawmap
+would be unable to read.
+The code is intended to be smart enough to read SDTS files from the USGS,
+and hopefully from other sources, but it is not necessarily
+smart enough to read any file you might throw at it.
+If you find a USGS SDTS file that
+.I drawmap
+can't read, I would be interested in hearing about it.
+(I can't promise to fix the problem, because the range of possibilities is
+large, and I don't want to end up trying to support every dialect that
+happens to pop up.)
+.PP
+Most of the SDTS DEM files I have examined store elevations as binary
+two's-complement integer numbers.
+Some files, however, store them as binary floating-point numbers,
+in IEEE 754 format.
+When it encounters such a file,
+.I drawmap
+simply assumes that your computer uses IEEE 754 floating
+point as its native floating point format.  If this assumption is
+not true, then the file won't be correctly parsed.
+.PP
+There may be some DLG attribute codes that are not properly handled.
+While I have downloaded and processed thousands of DLG files, in the various
+supported formats, I can't be sure that this subset of the available files
+spans the full range of possibilities.
+Also, it is not always clear, in the relevant specifications documents,
+exactly how attributes should be encoded, in either the old-style DLG files
+or the newer SDTS DLG files.
+I know of at least a few ambiguities that I am not sure how to handle.
+These are documented in the source code.
+Furthermore, there are numerous special cases, some of which appear to involve
+relatively small subsets of the USA.
+I put a lot of effort into trying to properly process the attributes,
+but it is difficult to test every possible situation, and my patience
+for dealing with finicky details is not infinite.
+.SH SEE ALSO
+.I llsearch(1), utm2ll(1), ll2utm(1), block_dlg(1), block_dem(1), sdts2dem(1), sdts2dlg(1), pgm(1)
+\" =========================================================================
+\" drawmap.1 - The manual page for the drawmap program.
+\" Copyright (c) 1997,1998,1999,2000,2001,2008  Fred M. Erickson
+\"
+\" This program is free software; you can redistribute it and/or modify
+\" it under the terms of the GNU General Public License as published by
+\" the Free Software Foundation; either version 2, or (at your option)
+\" any later version.
+\"
+\" This program is distributed in the hope that it will be useful,
+\" but WITHOUT ANY WARRANTY; without even the implied warranty of
+\" MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+\" GNU General Public License for more details.
+\"
+\" You should have received a copy of the GNU General Public License
+\" along with this program; if not, write to the Free Software
+\" Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+\" =========================================================================

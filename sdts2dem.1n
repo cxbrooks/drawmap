@@ -1,0 +1,119 @@
+.TH SDTS2DEM 1 "Jul 24, 2001" \" -*- nroff -*-
+.SH NAME
+sdts2dem \- Convert a 24K USGS SDTS DEM to a DEM in the `classic' format.
+.SH SYNOPSIS
+.B sdts2dem
+[-L] | [sdts_dem_file.ddf [output_file_name]]
+
+.SH DESCRIPTION
+The U.S. Geological Survey (USGS) provides sites on the Internet with
+a lot of Digital Elevation Model (DEM) data.
+Depending on the resolution of the data, it may be available in one
+of at least three different formats:  `classic' DEM format,
+a newer version of the `classic' format, or Spatial Data Transfer
+System (SDTS) format.
+The 24K DEM data (which are also called 7.5-minute DEM data)
+are only available for free-download in the SDTS format.
+.PP
+The
+.I drawmap
+program can read the files in SDTS format; but the SDTS data
+come in the form of archives, each of which contains numerous files.
+It may sometimes be more efficient, and perhaps simpler,
+to store the data in the `classic' format.
+.I Sdts2dem
+is a program that converts each SDTS archive into a single classic-format
+DEM file.
+So far,
+.I sdts2dem
+only works with 24K DEM data, mainly because I haven't got any
+other data available to test against.
+.PP
+If you invoke the program with the "-L" argument, it will print some
+license information and exit.
+In normal use, the first argument is an SDTS file name.
+.PP
+Each SDTS DEM archive should contain one or more files with names
+of the form ????CEL@.DDF,
+where the '?' symbol stands for any single character, and the '@'
+symbol stands for any single digit.  If you provide a single
+such file as an argument,
+.I sdts2dem
+will produce a classic-format DEM file, based on the given SDTS file
+and the other files in the SDTS archive.
+(When you unpack the SDTS archives, you can change all of the resulting
+file names to all lower case and/or compress all of the files
+with the
+.I gzip
+program.  If you are going to change to lower case, change all of the files.
+If you are going to compress the files, compress all of them.)
+.PP
+The USGS takes each 1-degree-square block of latitude and longitude, and divides it
+into an eight-by-eight grid of 7.5-minute-square `quads'.
+The rows of this grid are labeled 'a' to 'h' from
+bottom to top, and the columns are labeled `1' through `8' from right
+to left.  Each quad is then referred to by a name of the form `AABBBCD',
+where `AA' is the latitude of the southeast corner of the 1-degree block,
+`BBB' is the longitude of the southeast corner,
+and `C' and `D' represent the corresponding row and column labels.
+If you don't specify an output file name, the output file produced by
+.I sdts2dem
+will have the form `AABBBCD.dem'.
+If you specify an output file name, then your name will be used instead.
+.SH LIMITATIONS
+The converted files are in the newer version of the `classic' format.
+This newer format is theoretically backwards compatible with the
+older format, but has a bunch of new fields added to the file header
+(in space that the older format specified as blank).
+Most of these new fields will also be blank in the converted files, because
+their values are embedded in long human-readable text strings
+in the SDTS files, and I didn't consider it worth the effort to write
+a bunch of finicky code to dig them out.  Three of the new fields are
+included, though:  the horizontal datum, the vertical datum, and the
+vertical datum shift.
+These fields are useful in converting back and forth between coordinate
+systems, and in converting elevations to newer measurement scales.
+.PP
+.I Sdts2dem
+will try to populate all of the fields specified in the original `classic'
+format.  However, you may note some differences in the first 140 bytes of
+the header.  One such difference is
+that the latitude and longitude of the southeast corner usually
+appeared in bytes 131 through 139 of the original `classic' format, in
+a truncated form.  (The bytes in the DEM specification are numbered
+starting from 1.)
+In the new `classic' format, these two values are in bytes 110 through 135,
+in all of their un-truncated glory.
+As another example,
+.I sdts2dem
+doesn't even try to recover the free-format text field because it usually
+duplicates information present elsewhere, and because it isn't clear that
+we would end up with anything useful after automated conversion to
+SDTS and automated conversion back to `classic' DEM.
+.PP
+Some floating-point numbers will have a different format from their original
+USGS versions.  The USGS files normally put the first significant
+digit after the decimal point, while
+.I sdts2dem
+puts it in front of the decimal point.  The actual numeric values are the same,
+but the format differs.
+.SH SEE ALSO
+.I drawmap(1), sdts2dlg.1n
+\" =========================================================================
+\" sdts2dem.1 - The manual page for the sdts2dem program.
+\" Copyright (c) 2000,2001  Fred M. Erickson
+\"
+\" This program is free software; you can redistribute it and/or modify
+\" it under the terms of the GNU General Public License as published by
+\" the Free Software Foundation; either version 2, or (at your option)
+\" any later version.
+\"
+\" This program is distributed in the hope that it will be useful,
+\" but WITHOUT ANY WARRANTY; without even the implied warranty of
+\" MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+\" GNU General Public License for more details.
+\"
+\" You should have received a copy of the GNU General Public License
+\" along with this program; if not, write to the Free Software
+\" Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+\" =========================================================================

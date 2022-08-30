@@ -1,0 +1,385 @@
+
+
+Jul 10  2008:
+Changes in drawmap between version 2.5 and version 2.6:
+
++ Numerous minor changes to make the software compile with newer
+  compilers.  The software now compiles cleanly, with the -Wall
+  compiler option.  It should hopefully also compile on both
+  32-bit and 64-bit processors, but I don't have the resources
+  to test this.
+
+
+
+
+
+
+Aug  2  2001:
+Changes in drawmap between version 2.4 and version 2.5:
+
++ Version 2.4 used a relatively simple interpolation algorithm to map
+  24K DEM data into the map image.  It didn't warp the data blocks to
+  completely fill the corresponding latitude/longitude squares.
+  Version 2.5 uses a more sophisticated algorithm, which does warp
+  the data, and consequently produces better data registration at the
+  seams between data blocks, along with more accurate placement of data
+  points.
+
+  The "LIMITS" section, at the end of the drawmap manual page, has
+  been modified to reflect this change.
+
++ User-specified attribute restrictions were being ignored for
+  SDTS DLG files.  They should no longer be ignored.  (Thanks
+  to BM for reporting this problem.)
+
++ Some 7.5 minute DEM files use SDTS conventions that are different
+  from those of the bulk of the files I have examined.  For example,
+  while it appears that most files specify a sequence of (x,y) coordinates
+  as an ISO 8211 2-dimensional cartesian array, some files specify them
+  as simple repeating pairs.  I am not sure that this particular construct
+  is standards-compliant, but I have modified drawmap to try to handle it
+  anyway.  (Thanks to TF for reporting this problem.)
+
+  There are also cases where, for example, data items are stored as integers
+  (in ASCII decimal, or straight binary) for one quad, while the same items
+  are stored as real numbers for another.  This sort of thing is allowed under
+  the standard.  (Under the standard, there are six acceptable ways to store
+  elevations.)  Drawmap doesn't try to handle every possible format variation.
+  It does try to handle the ones that I have sample files for.  I made several
+  changes in this release to support additional subfield formats.  However,
+  files that drawmap cannot handle may still be lurking out there.
+  
++ Due to floating point rounding errors, sdts2dem (and possibly sdts2dlg)
+  did not always determine correct output file names.  This has (hopefully)
+  been fixed.  It is a bit difficult to be sure, because I don't know of
+  any firm limits on the values that can appear in an SDTS DEM or DLG file,
+  and the SDTS files themselves may contain errors.  In any case, the
+  file-name generation code has been made more robust.
+
++ Some 7.5 minute DEM files appear to contain 32767 or -32767 as markers
+  for non-valid data.  Drawmap was unaware of this and treated the values
+  as valid elevations.  Such values are now discarded.
+
++ Moved the comment blocks to the ends of the manual pages.
+  For some reason, having them at the beginning caused a
+  whole bunch of blank pages to be output at the beginning
+  of a formatted page.
+
++ Improved handling of return values in get_a_line().  As far as
+  I know, the unimproved routine works okay with drawmap; but
+  the improvements should make get_a_line() more robust for
+  people who want to use the routine in their own software.
+
++ Made a couple of minor changes to make drawmap more portable.
+
++ Fixed some minor miscellaneous problems.
+
+
+
+
+
+
+Mar 26  2001:
+Changes in drawmap between version 2.3 and version 2.4:
+
++ Drawmap can now handle DEM files with elevations in feet.
+
++ Some clarifications have been added to the manual page,
+  including an example of the use of GTOPO30 files.
+
++ There is some additional installation information in the
+  README file.
+
+
+
+
+
+
+Jan 16  2001:
+Changes in drawmap between version 2.2 and version 2.3:
+
++ This point release is partly the result of downloading more
+  test data for more parts of the USA, and fixing whatever new
+  problems might show up.  There are, however, several new
+  options and general modifications, and also a few bug fixes.
+  These are described below, although some of the minor bug
+  fixes are omitted.
+
++ Added the -r option to allow the sharpness of the shaded
+  relief to be varied.  The default is fully-shaded relief,
+  which was the only available shading in previous releases.
+  The new option allows the darkness of shadows to be
+  reduced, in steps, until all shading disappears and only
+  simple color bands remain.
+
++ Added the -z option, which adjusts the color table so that
+  it exactly spans the range of elevations in the given
+  data.  This ensures that all available colors are used in
+  the map; but at the cost of having each color represent
+  a peculiar range of elevations.
+
++ Added the -m option, which allows limited enhancement
+  of light/dark shading in shaded-relief maps.
+
++ Added the -t option, to shut off generation of tick
+  marks and latitude/longitude markings.
+
++ In response to a request, added the -C option, which works
+  the same as the -c option, except that it fills in the
+  space between contour lines with solid colors.
+
++ In past releases, the -c option located contour lines in
+  the centers of the elevation bands.  In other words, if
+  the contour interval was 100 meters, then the first contour
+  would be at 50 meters, with the next at 150 meters.
+  In this release the code has been modified so that contour
+  lines are on the edges of the elevation bands.  In other
+  words, if the contour interval is 100 meters, then the
+  contours are at 100 meters, 200 meters, and so on.
+
++ A few of the GTOPO30 files were rejected because quantization
+  error caused some consistency checking to fail.  Loosened
+  up the checks slightly so that the files now pass muster.
+
++ Updated the color scheme for drawing DLG vector data.
+  Changed railroads and pipelines to black, and changed
+  vegetative features to green.
+
++ Added support for more attribute types, including
+  190/UNPAVED.  Fixed a few attributes that have special
+  cases, such as range and township numbers that can
+  take forms like "10 1/2E".
+
++ Some USGS SDTS DLG files have attributes whose record
+  IDs double back and duplicate other record IDs in the file.
+  (Wilmington Delaware 24K DLG HY 1379127.HY.sdts.tar.gz
+  and 1379151.HY.sdts.tar.gz are examples.)  I would guess
+  that this is a bug in the SDTS files, since it would leave
+  no way to distinguish between attributes.  (One could use
+  the record number in the ISO 8211 header, but I don't
+  think this is considered legitimate under the standard.)
+  One way or the other, this was causing drawmap some
+  indigestion, so the software has been fixed to deal with
+  the problem as best it can.  Drawmap prints a warning
+  message when this situation occurs.
+
++ Beefed up the test program, tacked onto the end of
+  sdts_utils.c, so that it is a useful viewing tool
+  for SDTS files.
+
+
+
+
+
+
+Aug  1  2000:
+Changes in drawmap between version 2.1 and version 2.2:
+
++ Added the sdts2dem and sdts2dlg programs to convert
+  SDTS transfers into the `classic' DEM and `optional'
+  DLG formats.  I wrote these primarily to allow me
+  to test drawmap's SDTS capabilities, but they should
+  be generally useful.
+
++ Improved the handling of SDTS files.  In particular,
+  we no longer ignore some of the minor attribute files,
+  so all attributes should be included.  Improved the
+  handling of attributes overall.  This includes
+  specific support for attributes with special needs.
+
++ There were a number of minor repairs and upgrades here
+  and there.
+  
++ Decreased the default memory footprint a bit, by changing
+  some long variables to shorts in some of the larger
+  arrays.  Unfortunately, new feature development probably
+  devoured a lot of these savings.
+  
++ Modified the -h option to automatically include a blue
+  surface at sea level.
+  
++ Modified the -i option to include the DLG name, and the
+  type of data in the file, when printing info about DLG files.
+
+
+
+
+
+Jul 23  2000:
+Changes in drawmap between version 2.0 and version 2.1:
+
++ Added support for the NAD-83 datum and the WGS-84 datum.
+
++ Drawmap can now read SDTS-format DEM and DLG files.
+
++ At the request of a drawmap user, I added GTOPO30
+  files to the set of files drawmap can read.  This should
+  provide at least some map-drawing capability for people
+  who can't get DEM data for their countries of interest.
+
++ There were a number of minor repairs and upgrades here
+  and there.
+
++ Changed the names of block_dem and block_dlg to unblock_dem
+  and unblock_dlg so that they are consistent with the
+  equivalent "dd" commands.
+
+
+
+
+
+Jul  8  2000:
+Changes in drawmap between version 1.10 and version 2.0:
+
++ This was a fairly major restructuring of drawmap, mainly to
+  get it to handle DEM and DLG data at the 7.5-minute
+  resolution.
+
++ In past versions of drawmap, data smoothing was done when
+  the image resolution and data resolution were the same.
+  This version of drawmap no longer smooths when the source
+  data and target image have close to the same resolution.
+  In addition, the code implementing smoothing has been
+  clarified, so that the smoothing behavior should be easier
+  to understand and modify.
+
++ Restructured the shaded relief code to allow it to handle
+  data from DEMs in various resolutions.  Also moved most of
+  the color definitions into colors.h so that users can more
+  easily modify the color scheme.  Provided four separate
+  color map tables, selectable by the "-n" option, so that
+  users can choose between a variety of color schemes.
+  "Natural" colors are now the default, rather than the
+  garish high-perception colors used in previous versions.
+
+  Also toned down the red and blue that are used to draw
+  streams and roads.  They were a bit distracting.
+
++ Added a new "-w" option to allow flat sea-level areas to be
+  automatically colored blue.
+
++ Removed the requirement that the x and y dimensions be even.
+  This was done primarily because 7.5-minute DEMs often have
+  odd dimensions.
+
++ Drawmap no longer tries to create an image file until after
+  most error checking is done.  This should reduce the incidence
+  of half-created image files being left behind after an error.
+
++ Drawmap now uses Redfearn's formulas to convert UTM coordinates
+  to latitude/longitude coordinates and vice versa.  However,
+  the program still uses linear interpolation from the corners
+  of the data blocks to transfer DEM data into the map image.
+
++ There are two new stand-alone commands, utm2ll and ll2utm that
+  convert latitude/longitude coordinates to UTM coordinates and
+  vice versa.  They currently only support the NAD-27 datum,
+  but can be easily modified to use others.
+
++ The dem_dlg_info program has been deleted.  It is replaced by
+  the "-i" option to drawmap.
+
++ The height-field program in the height_field subdirectory has
+  been deleted.  It is replaced by the "-h" option to drawmap.
+  The code that tried to generate "povray" objects for roads,
+  lakes, towns, and so on, is no longer present in any form.
+  It produced crude results and didn't seem very useful.
+
+
+
+
+
+Jun 18  2000:
+Changes in drawmap between version 1.9 and version 1.10:
+
++ The USGS has changed the format of both types of GNIS
+  files.  Modified drawmap to handle the new formats.
+  NOTE:  Files in the old formats will no longer work.
+
++ Cleaned up a few minor things here and there.
+
+
+
+
+
+Jun  3  2000:
+Changes in drawmap between version 1.8 and version 1.9:
+
++ Some of the newer USGS 100K DLG files contain newlines.
+  (Older ones did not.)
+  Modified drawmap to handle this new wrinkle.
+
++ Provided a new program called dem_dlg_info, to print
+  out some useful information from the headers of DEM
+  and DLG files.
+
++ Dropped the block_std program, since standard-format
+  files have disappeared from the USGS web site.
+
++ Added manual pages for block_opt and dem_dlg_info.
+
+
+
+
+
+Jan  3  2000:
+Changes in drawmap between version 1.7 and version 1.8:
+
++ Clarified the code comments and the manual page for drawmap.
+
++ Included the povray_height_field directory, which contains
+  a modified version of drawmap that will produce information
+  that the ``povray'' package can use to make 3-dimensional
+  renderings of terrain.
+
++ There were no changes in the operation of drawmap --- only
+  changes in the code comments.  The primary purpose of this
+  release was to add the drawmap_height_field program.
+
+
+
+
+
+Jan 16  1999:
+Changes in drawmap between version 1.6 and version 1.7:
+
++ removed restrictions on the size of contouring intervals
+
++ added code to allow use on big-endian machines
+
++ added gaussian smoothing for oversampled maps to reduce checkerboard effect
+
++ changed DLG line-drawing algorithm to produce better map registration
+
++ changed drawmap and llsearch to handle the new GNIS format
+
+
+
+
+
+Dec 11  1998:
+Changes in drawmap between version 1.3 and version 1.6:
+
++ Fixed a portability bug, and an obscure bug in the code that
+  draws tick marks at the edges of the image.
+
++ Added some new information about licensing (see the file "COPYING_NOTE").
+
++ Added a new option "-c", that draws contour lines instead of the normal
+  shaded relief.
+
+
+
+
+
+Oct 12  1998:
+Changes in drawmap between version 1.3 and version 1.5
+(there was no version 1.4):
+
++ Fixed a portability bug, and an obscure bug in the code that
+  draws tick marks at the edges of the image.
+
++ Added some new information about licensing (see the file "COPYING_NOTE").
+
++ Added a new option "-c", that draws contour lines instead of the normal
+  shaded relief.

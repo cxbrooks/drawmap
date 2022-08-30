@@ -1,0 +1,946 @@
+NOTE:  THIS IS AN EXTRACT FROM A USGS DOCUMENT.  THE ORIGINAL DOCUMENT WAS OBTAINED FROM A USGS WEB SITE.
+
+
+
+
+              APPENDIX D.--DLG Attribute Codes
+
+
+
+Valid Minor Codes for the Coincident Feature Parameter
+
+    Code         Base Category
+
+    0002         Hypsography
+
+    0005         Hydrography
+
+    0007         Surface Cover
+
+    0009         Boundary
+
+    0015         Survey Control
+
+                 Transportation Systems
+
+    0017         Roads and Trails
+
+    0018         Railroads
+
+    0019         Pipelines, Transmission Lines, Miscellaneous
+                   Transportation
+
+    0020         Manmade Features
+
+
+
+
+                     APPENDIX D.--DLG Attribute Codes--continued
+__________________________________________________________________________________________________________________________________
+                                                                            MAJOR   MINOR
+DATA CATEGORY             TYPE OF CODE              APPLICATION             CODE    CODE                  DESCRIPTION
+__________________________________________________________________________________________________________________________________
+Hypsography               Feature identification    Nodes                    020     NONE    
+
+                                                    Areas                    020     0100    Void area
+
+                                                    Lines                    020     0200    Contour (index or intermediate)
+                                                                                     0201    Carrying contour
+                                                                                     0202    Supplementary contour
+                                                                                     0203    Continuation contour
+                                                                                     0204    Amended contour
+                                                                                     0205    Bathymetric contour
+                                                                                    *0206    Depth curve
+                                                                                     0207    Watershed divides
+                                                                                     0208    Closure line
+
+                                                    Points                   020     0300    Spot elevation, less than
+                                                     (degenerate lines)                       third order,
+
+                                                                             020     0301    Spot elevation, less than
+                                                                                              third order, not at ground
+                                                                                              level.
+
+                                                    Multiple element         020     NONE    
+                                                     types
+
+                          Descriptive               Multiple element         020     0600-   Decimal fractions of feet
+                                                     types                           0609     or meters
+                                                                                     0610    Approximate
+                                                                                     0611    Depression
+                                                                                     0612    Glacier or snow field
+                                                                                     0613    Underwater
+                                                                                     0614    Best estimate of contour
+                                                                                              elevation value
+
+                                                                             020     0000    Photorevised feature
+__________________________________________________________________________________________________________________________________
+* denotes a code which is no longer being used to encode features, but which may appear in older files.
+
+
+
+
+                     APPENDIX D.--DLG Attribute Codes--continued
+__________________________________________________________________________________________________________________________________
+                                                                            MAJOR   MINOR
+DATA CATEGORY             TYPE OF CODE              APPLICATION             CODE    CODE                  DESCRIPTION
+__________________________________________________________________________________________________________________________________
+Hypsography               Parameter                 Multiple element         02N     ----   Elevation in whole feet or
+ (cont'd.)                                           types                                   meters, right-justified
+                                                                             026     00--   Major category associated
+                                                                                             with a spot height, not at
+                                                                                             ground elevation.
+                                                                             029     00--   Coincident feature
+__________________________________________________________________________________________________________________________________
+Hydrography               Feature identification    Nodes                    050     0001   Upper origin of stream
+                                                                                     0002   Upper origin of stream at water body
+                                                                                     0003   Sink, channel no longer evident
+                                                                                     0004   Stream entering water body
+                                                                                     0005   Steam exiting water body
+
+                                                    Areas                    050     0100   Alkali flat
+                                                                                     0101   Reservoir 
+                                                                                     0102   Covered reservoir
+                                                                                     0103   Glacier or permanent snowfield
+                                                                                     0104   Salt evaporator
+                                                                                     0105   Inundation area
+                                                                                     0106   Fish hatchery or farm
+                                                                                     0107   Industrial water impoundment
+                                                                                     0108   Area to be submerged
+                                                                                     0109   Sewage disposal pond or 
+                                                                                             filtration beds
+                                                                                     0110   Tailings pond
+                                                                                     0111   Marsh, wetland, swamp, bog
+                                                                                     0112   Mangrove area
+                                                                                     0113   Rice field
+                                                                                     0114   Cranberry bog
+                                                                                     0115   Flats (tidal, mud, sand, gravel)
+                                                                                     0116   Bays, estuaries, gulfs, oceans, seas
+                                                                                     0117   Shoal 
+                                                                                     0118   Soda evaporator
+                                                                                     0119   Duck Pond
+                                                                                     0120   Void area
+
+
+
+
+                     APPENDIX D.--DLG Attribute Codes--continued
+__________________________________________________________________________________________________________________________________
+                                                                            MAJOR   MINOR
+DATA CATEGORY             TYPE OF CODE              APPLICATION             CODE    CODE                  DESCRIPTION
+__________________________________________________________________________________________________________________________________
+Hydrography               Feature identification    Lines                    050     0200   Shoreline
+ (cont'd.)       (cont'd.)                                                           0201   Manmade shoreline
+                                                                                     0202   Closure line
+                                                                                     0203   Indefinite shoreline
+                                                                                     0204   Apparent limit
+                                                                                     0205   Outline of a Carolina bay
+                                                                                     0206   Danger Curve
+                                                                                     0207   Apparent shoreline
+
+                                                    Points                   050     0300   Spring
+                                                                                     0301   Non-flowing well
+                                                                                     0302   Flowing well
+                                                                                     0303   Riser
+                                                                                     0304   Geyser
+                                                                                     0305   Windmill
+                                                                                     0306   Cistern
+
+                                                    Multiple element         050     0400   Rapids
+                                                     types                           0401   Falls
+                                                                                     0402   Gravel pit or quarry filled with water
+                                                                                     0403   Gaging station
+                                                                                     0404   Pumping station
+                                                                                     0405   Water intake
+                                                                                     0406   Dam or weir
+                                                                                     0407   Canal lock or sluice gate
+                                                                                     0408   Spillway
+                                                                                     0409   Gate (flood, tidal, head, check)
+                                                                                     0410   Rock 
+                                                                                     0411   Crevasse
+                                                                                     0412   Stream
+                                                                                     0413   Braided stream
+                                                                                     0414   Ditch or canal
+                                                                                     0415   Aqueduct
+                                                                                     0416   Flume
+                                                                                     0417   Penstock
+                                                                                     0418   Siphon
+                                                                                     0419   Channel in water area
+
+
+
+
+                     APPENDIX D.--DLG Attribute Codes--continued
+__________________________________________________________________________________________________________________________________
+                                                                            MAJOR   MINOR
+DATA CATEGORY             TYPE OF CODE              APPLICATION             CODE    CODE                  DESCRIPTION
+__________________________________________________________________________________________________________________________________
+Hydrography               Feature identification    Multiple element         050     0420   Wash or ephemeral drain
+ (cont'd.)                 (cont'd.)                 types (cont'd.)                 0421   Lake or pond
+                                                                                     0422   Coral reef
+                                                                                     0423   Sand in open water
+                                                                                     0424   Spoil area
+                                                                                     0425   Fish ladders
+                                                                                     0426   Holiday area
+
+                          Descriptive               Multiple element         050     0601   Underground
+                                                     types                           0602   Overpassing
+                                                                                     0603   Elevated
+                                                                                     0604   Tunnel
+                                                                                     0605   Right bank
+                                                                                     0606   Left bank
+                                                                                     0607   Under construction
+                                                                                     0608   Salt
+                                                                                     0609   Unsurveyed
+                                                                                     0610   Intermittent
+                                                                                     0611   Abandoned or discontinued
+                                                                                     0612   Submerged or sunken
+                                                                                    *0613   Wooded
+                                                                                     0614   Dry
+                                                                                     0615   Mineral or hot (sulphur, alkali, etc.)
+                                                                                     0616   Navigable, transportation
+                                                                                     0617   Underpassing
+                                                                                     0618   Earthen construction
+                                                                                     0619   Interpolated elevation
+                                                                                     0621-  Decimal fractions of feet or meters
+                                                                                     0629   
+
+                                                                             050     0000   Photorevised feature
+
+                          Parameter                 Multiple element         05N     ----   Water surface elevation, actual or
+                                                     types                                   interpolated, N=1 for feet, 
+                                                                                             2 for meters, 6 for feet below datum,
+                                                                                             and 7 for meters below datum.
+                                                                                             Elevation value in four spaces,
+                                                                                             right justified.
+
+
+
+
+                     APPENDIX D.--DLG Attribute Codes--continued
+__________________________________________________________________________________________________________________________________
+                                                                            MAJOR   MINOR
+DATA CATEGORY             TYPE OF CODE              APPLICATION             CODE    CODE                  DESCRIPTION
+__________________________________________________________________________________________________________________________________
+Hydrography               Parameter (cont'd.)       Multiple element         053     0---   Angle of clockwise rotation (nearest
+ (cont'd.)                                           types (cont'd)                          whole degree)
+                                                                             055     ----   River mile, value in four spaces, 
+                                                                                             right justified
+                                                                             058     0000   Best estimate of classification
+                                                                                             or position 
+                                                                             059     00--   Coincident feature
+__________________________________________________________________________________________________________________________________
+Boundaries                Feature identification    Nodes                    090     0001   Monumented point on a boundary
+
+                                                    Areas                    090     0100   Civil township, district, precinct,
+                                                                                             or barrio 
+                                                                                     0101   Incorporated city, village, town,
+                                                                                             borough, or hamlet
+                                                                                     0103   National park, monument, lakeshore, 
+                                                                                             seashore, parkway, battlefield, or 
+                                                                                             recreation area
+                                                                                     0104   National forest or grassland
+                                                                                     0105   National wildlife refuge, game 
+                                                                                             preserve, or fish hatchery
+                                                                                     0106   National scenic waterway, riverway,
+                                                                                             wild and scenic river, or 
+                                                                                             wilderness area
+                                                                                     0107   Indian reservation
+                                                                                     0108   Military reservation
+                                                                                     0110   Federal prison
+                                                                                     0111   Miscellaneous Federal reservation
+                                                                                     0129   Miscellaneous State reservation
+                                                                                     0130   State park, recreation area
+                                                                                             arboretum, or lake
+                                                                                     0131   State wildlife refuge, game preserve,
+                                                                                             or fish hatchery
+                                                                                     0132   State forest or grassland
+                                                                                     0133   State prison
+                                                                                     0134   County game preserve
+
+
+
+
+                     APPENDIX D.--DLG Attribute Codes--continued
+__________________________________________________________________________________________________________________________________
+                                                                            MAJOR   MINOR
+DATA CATEGORY             TYPE OF CODE              APPLICATION             CODE    CODE                  DESCRIPTION
+__________________________________________________________________________________________________________________________________
+Boundaries (cont'd.)      Feature identification    Areas (cont'd.)          090     0150   Large park (city, county, or private)
+                           (cont'd.)                                                 0151   Small park (city, county, or private)
+                                                                                     0197   Canada
+                                                                                     0198   Mexico
+                                                                                     0199   Open water
+
+                                                    Lines                    090     0201   Indefinite (or approximate) boundary
+                                                                                     0202   Disputed boundary
+                                                                                     0203   Historical line
+                                                                                     0204   Boundary closure claim
+
+                                                    Points                   090     0301   Reference monuments for boundary
+                                                     (degenerate lines)                      points
+
+                                                    Multiple element         090     NONE
+                                                     types
+
+                          Descriptive               Multiple element         090     0000   Photorevised feature
+                                                     types
+
+                          Parameter                 Multiple element         091     00--   State FIPS code
+                                                     types                   092     0---   County or county equivalent FIPS code
+                                                                             095     ----   Monument number
+                                                                             096     XXYY   Alphabetic portion of any monument 
+                                                                                             number substitute numeric equivalent
+                                                                                             of alphabetic for XX and for YY ass
+                                                                                             follows:  00 blank, 01 = A, 02 = B,
+                                                                                             03 = C, 04 = D, 05 = E, 06 = F,
+                                                                                             07 = G, 08 = H, 09 = I, 10 = J,
+                                                                                             11 = K, 12 = L, 13 = M, 14 = N,
+                                                                                             15 = O, 16 = P, 17 = Q, 18 = R,
+                                                                                             19 = S, 20 = T, 21 = U, 22 = V,
+                                                                                             23 = W, 24 = X, 25 = Y, 26 = Z.
+                                                                             098     0000   Best estimate of classification
+                                                                                             or position.
+                                                                             099     00--   Coincident feature
+
+
+
+
+                     APPENDIX D.--DLG Attribute Codes--continued
+__________________________________________________________________________________________________________________________________
+                                                                            MAJOR   MINOR
+DATA CATEGORY             TYPE OF CODE              APPLICATION             CODE    CODE                  DESCRIPTION
+__________________________________________________________________________________________________________________________________
+Transportation, Roads,    Feature identification    Nodes                    170     0001   Bridge abutment
+  and Trails                                                                         0002   Tunnel portal
+                                                                                     0004   Gate
+                                                                                     0005   Cul-de-sac
+                                                                                     0006   Dead end
+                                                                                     0007   Drawbridge
+
+                                                                             170     0100   Void area
+
+                                 Lines                                       170     0201   Primary route, class 1, symbol
+                                                                                             undivided
+                                                                                     0202   Primary route, class 1, symbol
+                                                                                             divided by centerline
+                                                                                     0203   Primary route, class 1, divided,
+                                                                                             lanes separated
+                                                                                     0204   Primary route, class 1, one way, other
+                                                                                             than divided highway
+                                                                                     0205   Secondary route, class 2, symbol
+                                                                                             undivided 
+                                                                                     0206   Secondary route, class 2, symbol
+                                                                                             divided by centerline
+                                                                                     0207   Secondary route, class 2, symbol
+                                                                                             divided, lanes separated
+                                                                                     0208   Secondary route, class 2, one way,
+                                                                                             other then divided highway
+                                                                                     0209   Road or street, class 3
+                                                                                     0210   Road or street, class 4
+                                                                                     0211   Trail, class 5, other than four-wheel 
+                                                                                             drive vehicle
+                                                                                     0212   Trail, class 5, four-wheel-drive
+                                                                                             vehicle
+                                                                                     0213   Footbridge
+                                                                                     0214   Ferry crossing
+                                                                                     0215   Perimeter of parking area
+                                                                                     0216   Arbitrary extension of line (join or 
+                                                                                             closure)
+
+
+
+
+                     APPENDIX D.--DLG Attribute Codes--continued
+__________________________________________________________________________________________________________________________________
+                                                                            MAJOR   MINOR
+DATA CATEGORY             TYPE OF CODE              APPLICATION             CODE    CODE                  DESCRIPTION
+__________________________________________________________________________________________________________________________________
+Transportation, Roads,    Feature identification    Lines (cont'd.)                  0217   Road or street, class 3, symbol
+  and trails (cont'd.)            (cont'd.)                                                  divided by centerline
+                                                                                     0218   Road or street, class 3, divided
+                                                                                             lanes separated
+                                                                                     0221   Road in street, class 3, one way
+                                                                                     0222   Road in transition
+
+                                                    Points                           NONE   
+                                                     (degenerate lines)
+
+                                                    Multiple element         170     0401   Traffic circle
+                                                     type                            0402   Cloverleaf or interchange
+                                                                                     0403   Toll gate, toll plaza or perimeter or 
+                                                                                             toll plaza
+                                                                                     0404   Weigh station
+                                                                                     0405   Nonstandard section of road
+                                                                            *170     0600   Historical
+
+                          Descriptive               Multiple element         170     0601   In tunnel
+                                                     types                           0602   Overpassing, on bridge
+                                                                                     0603   Under construction, classification
+                                                                                             known
+                                                                                     0604   Under construction, classification
+                                                                                             unknown
+                                                                                     0605   Labeled "old railroad grade"
+                                                                                     0606   Submerged or in ford
+                                                                                     0607   Underpassing
+                                                                                    *0608   Limited access
+                                                                                     0609   Toll road
+                                                                                     0610   Privately operated or controlled
+                                                                                             public access
+                                                                                     0611   Proposed
+                                                                                     0612   Double-decked
+                                                                                     0613   In service facility or rest area
+                                                                                     0614   Elevated
+                                                                                     0615   Bypass route
+                                                                                     0616   Alternate route
+
+
+
+
+                     APPENDIX D.--DLG Attribute Codes--continued
+__________________________________________________________________________________________________________________________________
+                                                                            MAJOR   MINOR
+DATA CATEGORY             TYPE OF CODE              APPLICATION             CODE    CODE                  DESCRIPTION
+__________________________________________________________________________________________________________________________________
+Transportation, Roads,    Descriptive               Multiple element         170     0617   Business route
+ and trails (cont'd.)      (cont'd.)                 types (cont'd.)                 0618   On drawbridge
+                                                                                     0619   Spur
+                                                                                     0620   Loop
+                                                                                     0621   Connector
+                                                                                     0622   Truck route
+                                                                                     0650   Road width 46-55 feet, 0.025 inches
+                                                                                             at 1:24,000
+                                                                                     0651   Road width 56-65 feet, 0.030 inches
+                                                                                             at 1:24,000
+                                                                                     0652   Road width 66-75 feet, 0.035 inches
+                                                                                             at 1:24,000
+                                                                                     0653   Road width 76-85 feet, 0.040 inches
+                                                                                             at 1:24,000
+                                                                                     0654   Road width 86-95 feet, 0.045 inches
+                                                                                             at 1:24,000
+                                                                                     0655   Road width 96-105 feet, 0.050 inches
+                                                                                             at 1:24,000
+                                                                                     0656   Road width 106-115 feet, 0.055 inches
+                                                                                             at 1:24,000
+                                                                                     0657   Road width 116-125 feet, 0.060 inches
+                                                                                             at 1:24,000
+                                                                                     0658   Road width 126-135 feet, 0.065 inches
+                                                                                             at 1:24,000
+                                                                                     0659   Road width 136-145 feet, 0.070 inches
+                                                                                             at 1:24,000
+
+                                                                             170     0000   Photorevised feature
+
+                          Parameter                 Multiple element         171     ----   Number of lanes
+                                                     types                   172     ----   Interstate route number
+                                                                             173     ----   U.S. route number
+                                                                             174     ----   State route number
+                                                                             175     ----   Reservation, park, or military route
+                                                                                             number 
+                                                                             176     ----   County route
+
+
+
+
+                     APPENDIX D.--DLG Attribute Codes--continued
+__________________________________________________________________________________________________________________________________
+                                                                            MAJOR   MINOR
+DATA CATEGORY             TYPE OF CODE              APPLICATION             CODE    CODE                  DESCRIPTION
+__________________________________________________________________________________________________________________________________
+Transportation, Road,     Parameter (cont'd.)       Multiple element         177     XXYY   Alphabetic portion of any route
+ and Trails (cont'd.)                                types (cont'd.)                         number.  Substitute numeric equiva-
+                                                                                             lent of alphabetic for XX and for YY
+                                                                                             as follows:  00 = blank, 01 = A,
+                                                                                             02 = B, 03 = C, 04 = D, 05 = E,
+                                                                                             06 = F, 07 = G, 08 = H, 09 = I,
+                                                                                             10 = J, 11 = K, 12 = L, 13 = M,
+                                                                                             14 = N, 15 = O, 16 = P, 17 = Q,
+                                                                                             18 = R, 19 = S, 20 = T, 21 = U,
+                                                                                             22 = V, 23 = W, 24 = X, 25 = Y,
+                                                                                             26 = Z.
+                                                                             178     0000   Best estimate of position or 
+                                                                                             classification
+                                                                             179     00--   Coincident feature
+__________________________________________________________________________________________________________________________________
+Transportation,           Feature identification    Nodes                    180     0001   Bridge abutment
+  Railroads                                                                          0002   Tunnel portal
+                                                                                     0007   Drawbridge
+
+                                                    Areas                    180     0100   Void area
+
+                                                    Lines                    180     0201   Railroad
+                                                                                     0202   Railroad in street or road
+                                                                                     0204   Carline
+                                                                                     0205   Cog railroad, incline railway,
+                                                                                             logging tram
+                                                                                     0207   Ferry crossing
+                                                                                     0208   Railroad siding
+                                                                                     0209   Perimeter or limit of yard
+                                                                                     0210   Arbitrary line extension
+                                                                                     0211   Closure line
+
+                                                    Points                   180     NONE   
+                                                     (degenerate lines)
+
+                                                    Multiple element         180     0400   Railroad station, perimeter of
+                                                     types                                   station
+                                                                                     0401   Turntable
+                                                                                     0402   Roundhouse
+                                                                            *180     0600   Historical
+
+
+
+
+                     APPENDIX D.--DLG Attribute Codes--continued
+__________________________________________________________________________________________________________________________________
+                                                                            MAJOR   MINOR
+DATA CATEGORY             TYPE OF CODE              APPLICATION             CODE    CODE                  DESCRIPTION
+__________________________________________________________________________________________________________________________________
+Transportation,           Descriptive               Multiple element         180     0601   In tunnel
+  Railroads (cont'd.)                                types                           0602   Overpassing, on bridge
+                                                                                     0603   Abandoned
+                                                                                     0604   Dismantled
+                                                                                     0605   Underpassing
+                                                                                     0606   Narrow gauge
+                                                                                     0607   In snowshed or under structure
+                                                                                     0608   Under construction
+                                                                                     0609   Elevated 
+                                                                                     0610   Rapid transit
+                                                                                     0611   On drawbridge
+                                                                                     0612   Private 
+                                                                                     0613   U.S. Government
+                                                                                     0614   Juxtaposition
+
+                                                                             180     0000   Photorevised feature
+                          Parameter                 Multiple element         181     ----   Number of tracks
+                                                     types                   188     0000   Best estimate of position or 
+                                                                                             classification
+                                                                             189     00--   Coincident feature
+__________________________________________________________________________________________________________________________________
+Transportation,           Feature identification    Nodes                    190     0001   End of transmission line at
+ Pipelines, Trans-                                                                           power station, substation, or
+ mission Lines,                                                                              hydroelectric plant
+ Miscellaneous Trans-                                                                0002   End of pipeline at oil or gas
+ portation Features                                                                          field
+                                                                                     0003   End of pipeline at refinery,
+                                                                                             depot, or tank farm
+
+                                                    Areas                    190     0100   Void area
+
+                                                    Lines                    190     0201   Pipeline
+                                                                                     0202   Power transmissiion line
+                                                                                     0203   Telephone or telegraph line
+                                                                                     0204   Aerial tramway, monorail, ski
+                                                                                             lift
+                                                                                     0205   Arbitrary line extension
+                                                                                     0206   Closure line
+__________________________________________________________________________________________________________________________________
+
+
+
+
+                     APPENDIX D.--DLG Attribute Codes--continued
+__________________________________________________________________________________________________________________________________
+                                                                            MAJOR   MINOR
+DATA CATEGORY             TYPE OF CODE              APPLICATION             CODE    CODE                  DESCRIPTION
+__________________________________________________________________________________________________________________________________
+Transportation,           Feature identification    Points                   190     0300   Seaplane anchorage
+ Pipelines, Trans-         (cont'd.)                 (degenerate lines)
+ mission Lines,
+ Miscellaneous Trans-                               Multiple element         190     0400   Power station
+ portation Features (cont'd.)                        types                           0401   Substation
+                                                                                     0402   Hydroelectric Plant
+                                                                                     0403   Landing strip, airport,
+                                                                                             perimeter of airport
+                                                                                     0404   Heliport, perimeter of heliport
+                                                                                     0405   Launch complex, perimeter of 
+                                                                                             launch complex
+                                                                                     0406   Pumping station (other than 
+                                                                                             water)
+                                                                                     0407   Seaplane ramp or landing area
+                                                                                     0408   Measuring station
+
+                          Descriptive               Multiple element         190     0600   Underground
+                                                     types                           0601   Under construction
+                                                                                     0602   Abandoned
+                                                                                     0603   Above ground
+                                                                                     0604   Labeled "closed"
+                                                                                     0605   Unimproved, loose surface
+                                                                                     0606   Submerged 
+                                                                                     0607   Nuclear
+
+                                                                             190     0000   Photorevised feature
+
+                          Parameters                Multiple element         193     0---   Angle of clockwise rotation
+                                                     types                                   (nearest whole degree)
+                                                                             198     0000   Best estimate of position or 
+                                                                                             classification
+                                                                             199     00--   Coincident feature
+__________________________________________________________________________________________________________________________________
+
+
+
+
+                     APPENDIX D.--DLG Attribute Codes--continued
+__________________________________________________________________________________________________________________________________
+                                                                            MAJOR   MINOR
+DATA CATEGORY             TYPE OF CODE              APPLICATION             CODE    CODE                  DESCRIPTION
+__________________________________________________________________________________________________________________________________
+U.S. Public Land          Feature identification    Nodes                    300     0001   U.S. Public Land Survey System
+ Survey System                                                                               section corner
+                                                                                     0002   Point on section line (no corner)
+                                                                                     0003   Closing corner
+                                                                                     0004   Meander corner
+                                                                                     0005   Auxiliary meander corner
+                                                                                     0006   Special meander corner
+                                                                                     0007   Witness corner
+                                                                                     0008   Witness point
+                                                                                     0009   Angle point
+                                                                                     0010   Location monument (includes amended
+                                                                                             monument and mineral monument)
+                                                                                     0011   Reference mark
+                                                                                     0012   Quarter-section corner
+                                                                                     0013   Tract corner
+                                                                                     0014   Land grant corner
+                                                                                     0015   Arbitrary section corner
+
+                                                    Nodes (identifi-         300     0040   Corner identified in field
+                                                     cation procedures)              0041   Corner with horizontal coordinates
+                                                                                     0042     Corner with elevation value
+
+                          Parameters                Areas                                   Select one parameter code from each of
+                                                                                             the following A, B, C, and D lists 
+                                                                                             and/or consult list E.
+
+                                                                                            A.  Origin of Survey
+
+                                                                             306     00--   Insert two-digit code from Appendix K.
+
+                                                                                            B.  Township number(s)
+
+                                                                             30-     ----   Insert 2 for north of the baseline or
+                                                                                             3 for south of the baseline in first
+                                                                                             space.  In the second space, insert
+                                                                                             a 0 for full township, 2 for 1/4
+                                                                                             township, 4 for « township, or 6
+                                                                                             for 3/4 township.  Insert township
+                                                                                             number in the last three spaces,
+                                                                                             right justified.
+
+
+
+
+                     APPENDIX D.--DLG Attribute Codes--continued
+__________________________________________________________________________________________________________________________________
+                                                                            MAJOR   MINOR
+DATA CATEGORY             TYPE OF CODE              APPLICATION             CODE    CODE                  DESCRIPTION
+__________________________________________________________________________________________________________________________________
+U.S. Public Land          Parameters                Areas (cont'd.)                         C.  Range number(s)
+ Survey System             (cont'd.)
+ (cont'd.)                                                                   30-     ----   Insert 4 for east of the principal 
+                                                                                             meridian or 5 for west of the
+                                                                                             principal meridian in the first
+                                                                                             space.  In the second space, insert
+                                                                                             a 0 for a full range, 2 for 1/4
+                                                                                             range, 4 for « range, 6 for 3/4
+                                                                                             range, 8 for duplicate to the north
+                                                                                             or east of the original township, or
+                                                                                             9 for triplicate to the north or
+                                                                                             east of the original township. 
+                                                                                             Insert range number in last three
+                                                                                             spaces, right justified.
+
+                                                                                            D.  Section number
+                                                                             301     ----   In the first space, insert 0 for 
+                                                                                             numeric section identifier, 1 for
+                                                                                             numeric portion of alphanumeric 
+                                                                                             identifier or 2 for alphabetic part
+                                                                                             of alphanumeric identifier.  In the
+                                                                                             last three spaces, insert section
+                                                                                             number or numeric representation of 
+                                                                                             alphabetic character (01-26), right
+                                                                                             justified.
+
+                                                                                            E.  Land grant identifier
+                                                                             307     ----   In the first space, insert the 
+                                                                                             appropriate number:
+
+                                                                                        0   for numeric grant identifier
+                                                                                        1   for numeric portion of alphanumeric
+                                                                                             identifier
+                                                                                        2   for alphabetic portion of
+                                                                                             alphanumeric identifier
+                                                                                        3   for alphabetic identifier
+                                                                                        4   for identifier of named grant in
+                                                                                             Arizona
+
+
+
+
+                     APPENDIX D.--DLG Attribute Codes--continued
+__________________________________________________________________________________________________________________________________
+                                                                            MAJOR   MINOR
+DATA CATEGORY             TYPE OF CODE              APPLICATION             CODE    CODE                  DESCRIPTION
+__________________________________________________________________________________________________________________________________
+U.S. Public Land          Parameters                Areas (cont'd.)                     5   for identifier of named grant in 
+ Survey system             (cont'd.)                                                         California
+ (cont'd.)                                                                              6   for identifier of named grant in 
+                                                                                             Colorado
+                                                                                        7   for identifier of named grant in New
+                                                                                             Mexico
+                                                                                        8   For identifier of named grant in
+                                                                                            other States
+                                                                                            In the last three spaces after 0-3
+                                                                                             above, insert the grant number or
+                                                                                             numeric representation of the 
+                                                                                             alphabetic character (01-26),
+                                                                                             right-justified.  In the last three
+                                                                                             spaces after 4-7 above, insert the
+                                                                                             three-digit code of the named grant
+                                                                                             as designated in Appendix L.
+
+                                                                                            F.  Excluded areas
+                                                                             301     0100   Indian  lands
+                                                                                     0101   Homestead entries
+                                                                                     0102   Donation land claims
+                                                                                     0103   Land grants; civil colonies
+                                                                                     0104   Private extension of public land
+                                                                                             survey
+                                                                                     0105   Area of public and private survey
+                                                                                             overlap
+                                                                                     0106   Overlapping land grants
+                                                                                     0107   Military reservation
+                                                                                     0198   Water
+                                                                                     0199   Unsurveyed area
+
+                          Feature identification    Lines                    300     0201   Approximate position (within 200 feet)
+                                                                                     0202   Protracted position
+                                                                                     0203   Arbitrary closure line
+                                                                                     0204   Base line
+                                                                                     0205   Claim line, grant line
+
+                                                    Points                   0300    0300   Location monument
+                                                     (degenerate lines)              0301   Isolated found section corner
+                                                                                     0302   Witness corner (off surveyed line)
+
+
+
+
+                     APPENDIX D.--DLG Attribute Codes--continued
+__________________________________________________________________________________________________________________________________
+                                                                            MAJOR   MINOR
+DATA CATEGORY             TYPE OF CODE              APPLICATION             CODE    CODE                  DESCRIPTION
+__________________________________________________________________________________________________________________________________
+U.S. Public Land          Parameter                 Multiple element         308     0000   Best estimate of classification and/or
+ Survey System                                       types                                   position
+ (cont'd.)                                                                   309     00--   Coincident feature or symbol
+__________________________________________________________________________________________________________________________________
+* denotes a code which is no longer being used to encode features, but which may appear in older files.
+
+
+
+
+
+              APPENDIX G.--Sample DLG Data File
+                (Optional Distribution Format)
+
+
+
+CARTERSVILLE, GA 01                      1981,        100000.  S01
+RO4.RDS01
+     3     1    16     2 0.25400000000D+01     4     0     4     1
+  -0.840560150000038D+08   0.340260150000010D+08   0.000000000000000D+00
+   0.000000000000000D+00   0.000000000000000D+00   0.000000000000000D+00
+   0.000000000000000D+00   0.000000000000000D+00   0.000000000000000D+00
+   0.000000000000000D+00   0.000000000000000D+00   0.000000000000000D+00
+   0.000000000000000D+00   0.000000000000000D+00   0.000000000000000D+00
+ 0.10000000000D+01 0.00000000000D+00 0.00000000000D+00 0.00000000000D+00
+SW       34.375000  -85.000000         683898.58  3805355.05
+NW       34.500000  -85.000000         683624.37  3819215.69
+NE       34.500000  -84.875000         695100.28  3819449.04
+SE       34.375000  -84.875000         695392.26  3805588.76
+ROADS AND TRAILS       0   551   551 010   198   198 011   747   747   1
+N    1   695392.26  3805588.76           2           0     0
+  -724   725
+N    2   685742.29  3819258.76           3           0     0
+     1    -2   -87
+N    3   684845.86  3819240.53           3           0     0
+    -1   -23  -258
+N    4   687098.38  3819286.33           3           0     0
+     2    -3   -34
+N    5   687347.30  3819288.85           3           0     0
+     3    -4   -35
+N    6   687509.77  3819294.70           3           0     0
+     4    -5   -42
+N    7   687735.78  3819299.29           3           0     0
+     5    -6   -43
+N    8   687842.44  3819301.46           3           0     0
+     6    -7   -45
+N    9   687969.42  3819304.04           3           0     0
+     7    -8   -67
+N   10   688042.96  3819310.62           3           0     0
+     8    -9   -66
+N   11   688129.40  3819307.29           3           0     0
+     9   -10   -80
+N   12   688462.08  3819314.06           3           0     0
+    10   -11   -31
+N   13   688632.22  3819317.52           3           0     0
+    11   -12   -32
+N   14   688837.92  3819321.70           3           0     0
+    12   -13   -24
+N   15   688947.12  3819323.92           3           0     0
+    13   -14   -26
+N   16   689490.57  3819334.97           3           0     0
+    14   -15  -154
+
+
+
+
+              APPENDIX G.--Sample DLG Data File
+          (Optional Distribution Format)--continued
+
+
+A    1   689504.51  3812402.15          61    65     1     0     0
+  -695  -701  -705  -706  -708  -710  -713  -714  -716  -718  -719  -722
+  -723   724   725   693   692   645   576   554   553   545   536   512
+   483   407   244   218   146   113    94    21    20    19    18    17
+    16    15    14    13    12    11    10     9     8     7     6     5
+     4     3     2     1  -258  -399  -464  -509  -543  -547  -557  -620
+  -689
+     0     0
+A    2   689504.51  3812402.15           3     4     0     0     0
+   726  -725  -724
+A    3   689504.51  3812402.15          10    32     0     0     0
+    87    -2   -34   -40    41   -49   -48   -74  -105   104
+A    4   689504.51  3812402.15           8    25     0     0     0
+   136    23    -1   -87  -137  -139  -141   140
+A    5   689504.51  3812402.15           5    28     0     0     0
+  -259   258   -23  -136  -237
+A    6   689504.51  3812402.15           3     8     0     0     0
+    34    -3   -35
+A    7   689504.51  3812402.15           5     9     0     0     0
+    59    35    -4   -42   -58
+A    8   689504.51  3812402.15           4     6     0     0     0
+    42    -5   -43    44
+A    9   689504.51  3812402.15           4     5     0     0     0
+    43    -6   -45    46
+A   10   689504.51  3812402.15           4     8     0     0     0
+    45    -7   -67    70
+A   11   689504.51  3812402.15           4     6     0     0     0
+    67    -8   -66   -68
+A   12   689504.51  3812402.15           5     6     0     0     0
+    66    -9   -80    79    78
+A   13   689504.51  3812402.15          17    34     0     0     1
+   106   -79    80   -10   -31   -37  -111  -110  -115  -117  -119  -121
+   122     0    84    85   -83
+A   14   689504.51  3812402.15           3     8     0     0     0
+    31   -11   -32
+A   15   689504.51  3812402.15           5     9     0     0     0
+    39    32   -12   -24   -38
+A   16   689504.51  3812402.15           4     6     0     0     0
+    24   -13   -26    25
+L    1     2     3     4     1                 2     0     0
+   685742.29  3819258.76   684845.86  3819240.53
+L    2     4     2     3     1                 2     0     0
+   687098.38  3819286.33   685742.29  3819258.76
+L    3     5     4     6     1                 2     0     0
+   687347.30  3819288.85   687098.38  3819286.33
+L    4     6     5     7     1                 2     0     0
+   687509.77  3819294.70   687347.30  3819288.85
+L    5     7     6     8     1                 2     0     0
+   687735.78  3819299.29   687509.77  3819294.70
+
+
+
+
+              APPENDIX G.--Sample DLG Data File
+          (Optional Distribution Format)--continued
+
+
+L    6     8     7     9     1                 2     0     0
+   687842.44  3819301.46   687735.78  3819299.29
+L    7     9     8    10     1                 2     0     0
+   687969.42  3819304.04   687842.44  3819301.46
+L    8    10     9    11     1                 2     0     0
+   688042.96  3819310.62   687969.42  3819304.04
+L    9    11    10    12     1                 2     0     0
+   688129.40  3819307.29   688042.96  3819310.62
+L   10    12    11    13     1                 2     0     0
+   688462.08  3819314.06   688129.40  3819307.29
+L   11    13    12    14     1                 2     0     0
+   688632.22  3819317.52   688462.08  3819314.06
+L   12    14    13    15     1                 2     0     0
+   688837.92  3819321.70   688632.22  3819317.52
+L   13    15    14    16     1                 2     0     0
+   688947.12  3819323.92   688837.92  3819321.70
+L   14    16    15    17     1                 2     0     0
+   689490.57  3819334.97   688947.12  3819323.92
+L   15    17    16    18     1                 2     0     0
+   690620.63  3819357.95   689490.57  3819334.97
+L   16    18    17    18     1                 2     0     0
+   690925.37  3819364.15   690620.63  3819357.95
+L   17    19    18    19     1                 2     0     0
+   691189.48  3819369.52   690925.37  3819364.15
+L   18    20    19    20     1                 2     0     0
+   691605.95  3819377.98   691189.48  3819369.52
+L   19    21    20    21     1                 2     0     0
+   693447.02  3819417.96   691605.95  3819377.98
+L   20    22    21    21     1                 2     0     0
+   694107.34  3819428.85   693447.02  3819417.96
+L   21    23    22    22     1                 2     0     0
+   694914.90  3819445.27   694107.34  3819428.85
+L   22    24    22    21    22                 3     1     0
+   694205.18  3819364.78   694194.61  3819384.89   694107.34  3819428.85
+   170   205
+L   23    25     3     5     4                 3     1     0
+   684825.58  3819113.09   684849.22  3819199.95   684845.86  3819240.53
+   170   209
+L   24    26    14    15    16                 2     1     0
+   688848.53  3819174.57   688837.92  3819321.70
+   170   210
+L   25    27    26    25    16                 2     1     0
+   688901.91  3819173.11   688848.53  3819174.57
+   170   210
+L   26    27    15    16    17                 3     1     0
+   688901.91  3819173.11   688939.85  3819181.50   688947.12  3819323.92
+   170   210
+L   27    28    17    18    18                 3     1     0
+   690593.10  3819212.58   690628.40  3819226.00   690620.63  3819357.95
+   170   209
+
+
+
+
+              APPENDIX G.--Sample DLG Data File
+          (Optional Distribution Format)--continued
+
+
+L   28    29    25     4     4                 3     1     0
+   685461.28  3819085.37   685414.90  3819117.45   684825.58  3819113.09
+   170   209
+L   29    30    24    24    22                 2     1     0
+   694605.90  3819273.85   694205.18  3819364.78
+   170   205
+L   30    30    23    22    23                 4     1     0
+   694605.90  3819273.85   694615.85  3819284.21   694851.82  3819423.66
+   694914.90  3819445.27
+   170   205
+L   31    31    12    13    14                 4     1     0
+   688529.54  3819119.81   688480.67  3819149.30   688470.15  3819166.87
+   688462.08  3819314.06
+   170   210
+L   32    31    13    14    15                 4     1     0
+   688529.54  3819119.81   688611.12  3819230.71   688637.82  3819292.23
+   688632.22  3819317.52
+   170   210
+L   33    32    21    21    21                 2     1     0
+   693453.44  3819227.55   693447.02  3819417.96
+   170   209
+L   34    33     4     3     6                 4     1     0
+   687148.37  3819076.48   687139.15  3819155.05   687123.40  3819180.14
+   687098.38  3819286.33
+   170   210
+L   35    33     5     6     7                 4     1     0
+   687148.37  3819076.48   687172.89  3819120.17   687342.68  3819265.89
+   687347.30  3819288.85
+   170   201

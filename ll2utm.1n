@@ -1,0 +1,70 @@
+.TH LL2UTM 1 "Jul 24, 2001" \" -*- nroff -*-
+.SH NAME
+ll2utm \- Convert latitude/longitude geographical coordinates to UTM coordinates
+.SH SYNOPSIS
+.B ll2utm
+[-L] | [latitude longitude [nad27 | nad83 | wgs84]]
+
+.SH DESCRIPTION
+This program uses Redfearn's formulas to convert a given latitude and longitude
+into the equivalent Universal Transverse Mercator (UTM) coordinates.
+(This operation is often referred to
+as projection, since it projects a curved surface onto a flat plane.)
+The input latitude and longitude must be in decimal degrees.
+Latitudes south of the equator are negative, and longitudes west of the
+prime meridian are negative.
+UTM is intended for use in the latitude range from 80S to 84N.
+The program will accept input outside of this range, but will print
+a warning message.
+.PP
+The output takes the form of a single line, containing the UTM "x" value,
+the UTM "y" value, and the UTM zone, separated by white space.
+The "x" value includes the normal 500,000 false easting.
+The "y" value includes the normal 10,000,000 false northing,
+if the point is in the southern hemisphere.
+Points in the southern hemisphere are flagged by making the
+zone number negative.
+.PP
+If you provide just the "-L" option, the program will print some license
+information and exit.
+.PP
+Projections, and inverse projections, depend on defining an ellipsoid that
+approximates the shape of the earth (the reference ellipsoid) and defining
+reference coordinates (the datum) that allow measurements to be made.
+Different choices of the ellipsoid and datum can yield projections that differ by
+tens of meters.  There are a wide variety of choices, due to both
+the historical progression of measurement technology, and the
+desire to maximize accuracy over a given region (such as North America, or
+one of the United States).
+.PP
+This program defaults to the North American Datum of 1927 (NAD-27) with
+the Clarke Ellipsoid of 1866, since these appear to be appropriate for much
+of the freely-available data.
+The data are apparently in the process of being converted to the Geodetic
+Reference System 1980 (GRS-80) ellipsoid
+and NAD-83.  If you come across such data, you can specify "nad83"
+on the command line.
+The GTOPO30 data use the World Geodetic System 1984 (WGS-84) ellipsoid, which can be invoked by
+specifying "wgs84" on the command line.
+.SH SEE ALSO
+The
+.I utm2ll(1)
+command provides the inverse conversion.
+\" =========================================================================
+\" ll2utm.1 - The manual page for the ll2utm program.
+\" Copyright (c) 2000,2001  Fred M. Erickson
+\"
+\" This program is free software; you can redistribute it and/or modify
+\" it under the terms of the GNU General Public License as published by
+\" the Free Software Foundation; either version 2, or (at your option)
+\" any later version.
+\"
+\" This program is distributed in the hope that it will be useful,
+\" but WITHOUT ANY WARRANTY; without even the implied warranty of
+\" MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+\" GNU General Public License for more details.
+\"
+\" You should have received a copy of the GNU General Public License
+\" along with this program; if not, write to the Free Software
+\" Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+\" =========================================================================

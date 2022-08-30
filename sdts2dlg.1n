@@ -1,0 +1,135 @@
+.TH SDTS2DLG 1 "Jul 24, 2001" \" -*- nroff -*-
+.SH NAME
+sdts2dlg \- Convert a USGS SDTS DLG to a DLG in the `optional' format.
+.SH SYNOPSIS
+.B sdts2dlg
+[-L] | [sdts_dlg_file.ddf [output_file_name]]
+
+.SH DESCRIPTION
+The U.S. Geological Survey (USGS) provides sites on the Internet with
+a lot of Digital Line Graph (DLG) data.
+Depending on the resolution of the data, it may be available in one
+of at least two different formats:  the `optional' DLG format,
+or the Spatial Data Transfer System (SDTS) format.
+The 24K DLG data (which are also called 7.5-minute DLG data)
+are only available for free download in the SDTS format.
+.PP
+The
+.I drawmap
+program can read files in SDTS format; but the SDTS information
+comes in the form of archives, each of which contains numerous files.
+It may sometimes be more efficient, and perhaps simpler,
+to store the data in the `optional' format.
+.I Sdts2dlg
+is a program that converts each SDTS archive into a single optional-format
+DLG file.
+Currently
+.I sdts2dlg
+only works with 24K and 100K DLG data.
+.PP
+If you invoke the program with the "-L" argument, it will print some
+license information and exit.
+In normal use, the first argument is an SDTS file name.
+.PP
+Each SDTS DLG archive should contain one or more files with names
+of the form ????LE@@.DDF,
+where the '?' symbol stands for any single character, and the '@'
+symbol stands for any single digit.  If you provide a single
+such file as an argument,
+.I sdts2dlg
+will produce an optional-format DLG file, based on the given SDTS file
+and the other files in the SDTS archive.
+(When you unpack the SDTS archives, you can change all of the resulting
+file names to all lower case and/or compress all of the files
+with the
+.I gzip
+program.  If you are going to change to lower case, change all of the files.
+If you are going to compress the files, compress all of them.)
+.PP
+The USGS takes each 1-degree-square block of latitude and longitude, and divides it
+into an eight-by-eight grid of 7.5-minute-square `quads'.
+The rows of this grid are labeled 'a' to 'h' from
+bottom to top, and the columns are labeled `1' through `8' from right
+to left.  Each quad is then referred to by a name of the form `AABBBCD',
+where `AA' is the latitude of the southeast corner of the 1-degree block,
+`BBB' is the longitude of the southeast corner,
+and `C' and `D' represent the corresponding row and column labels.
+If you don't specify an output file name, the output file produced by
+.I sdts2dlg
+will have the form `AABBBCD.dlg'.
+For 100K DLG files, each of which generally covers 16 quads, this
+naming is also used, with the `C' and `D' code being the same
+as for the quad with the same southeast corner as the 100K DLG data.
+If you specify an output file name, then your name will be used instead.
+.SH LIMITATIONS
+.I Sdts2dlg
+attempts to recreate the original DLG-3 file, as it was
+before conversion to SDTS.
+Node entries include line lists, but no area lists.
+Area entries include line lists, no node lists, and no area
+coordinate lists.
+Line entries include line coordinate lists.
+Attributes are included as major-minor pairs.
+.PP
+Try as it might, though,
+.I sdts2dlg
+is going to produce files that differ from the originals.
+In the Node entries, for example, the
+line lists have no preferred ordering, and the output from
+.I sdts2dlg
+is unlikely to reproduce the ordering of the original DLG file.
+In the Area entries, the line lists do have a specified ordering,
+but there is no rule for choosing which line to start each
+list with.  Thus, the lists are unlikely to be exact duplicates
+of the original file.
+Neither of these differences should be a problem.  The
+lists are still valid, even if they are not identical to the
+originals.
+.PP
+For the universe polygon (which completely surrounds the
+data coverage area) the Universal Transverse Mercator (UTM)
+coordinates of its representative point are likely to be different
+from the originals.
+The SDTS files do not appear to encode this particular representative
+point, so
+.I sdts2dlg
+inserts the coordinates of the southwest corner of the map area.
+.PP
+Some floating-point numbers will have a different format from their original
+USGS versions.  The USGS files normally put the first significant
+digit after the decimal point, while
+.I sdts2dlg
+puts it in front of the decimal point.  The actual numeric values are the same,
+but the format differs.
+.PP
+There are two fields
+in the header that don't always show up in existing optional-format
+files, although the specification allows them:  the horizontal datum
+and the vertical datum.  These are too useful to leave out, so
+.I sdts2dlg
+includes them.
+.PP
+Finally, there may be data discrepancies due to errors in the
+program.  Errors are a distinct possibility when it comes to
+attributes.  There are many different kinds of possible attributes, and
+I have not yet found adequate test data for some of them.
+.SH SEE ALSO
+.I drawmap(1), sdts2dem(1)
+\" =========================================================================
+\" sdts2dlg.1 - The manual page for the sdts2dlg program.
+\" Copyright (c) 2000,2001  Fred M. Erickson
+\"
+\" This program is free software; you can redistribute it and/or modify
+\" it under the terms of the GNU General Public License as published by
+\" the Free Software Foundation; either version 2, or (at your option)
+\" any later version.
+\"
+\" This program is distributed in the hope that it will be useful,
+\" but WITHOUT ANY WARRANTY; without even the implied warranty of
+\" MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+\" GNU General Public License for more details.
+\"
+\" You should have received a copy of the GNU General Public License
+\" along with this program; if not, write to the Free Software
+\" Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+\" =========================================================================

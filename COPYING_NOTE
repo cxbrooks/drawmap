@@ -1,0 +1,26 @@
+
+October 11, 1998
+
+I have had a request to change the licensing on "drawmap" so that it is subject
+to the GNU Library General Public License rather than the plain old GNU General
+Public License.  This would allow it to be incorporated into packages that, for
+whatever reason, can't be distributed in source-code form.
+
+However, after examining the situation in depth, I have decided not to do this.
+My primary reason is that I have incorporated large portions of the "gzip"
+package into drawmap, in order to allow compressed files to be read efficiently.
+The "gzip" package is licensed under the GNU General Public License, and it
+isn't within my legal power to change the licensing of that code.  The only
+obvious way to change the licensing on "drawmap" would be to split it into two
+separately-distributed chunks:  one containing the modified "gzip" code, and the
+other containing the remainder of "drawmap".  While this would be possible, it
+doesn't seem worthwhile, since the only portion of "drawmap" that has much
+utility as a stand-alone library is the "gzip" portion itself.
+
+If you have an interest in using other portions of "drawmap" under the terms of
+the GNU Library General Public License, then I suggest you contact me at the
+contact address in the README file.  I don't object to such use, as long as you
+understand that the "gzip" code is not mine to control.
+
+Fred M. Erickson
+

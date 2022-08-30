@@ -1,0 +1,80 @@
+.TH LLSEARCH 1 "Jul 24, 2001" \" -*- nroff -*-
+.SH NAME
+llsearch \- Search a GNIS file for place names within a given block of latitude/longitude
+.SH SYNOPSIS
+.B llsearch
+[-L] | [latitude_low longitude_low latitude_high longitude_high]
+
+.SH DESCRIPTION
+The U.S. Geological Survey supports sites on the Internet with
+Geographic Names Information System (GNIS) files.
+These files contain lists of place names, complete with their latitude/longitude and other information.
+There are separate files for each of the U.S. states, and each file contains many, many, many place names.
+If you want to use this data with
+.I drawmap,
+it is useful to reduce the data to only the items that you need.
+.I Llsearch
+lets you filter a GNIS file and winnow out only those place names that fall within
+the latitude/longitude boundaries that you specify.
+(You may want to specify boundaries that are a tiny bit larger than what you are
+interested in, so that numerical quantization doesn't eliminate locales that fall
+exactly on your boundaries.)
+.PP
+Latitudes and longitudes are positive for north latitude and east longitude, and negative
+for south latitude and west longitude.
+.I Llsearch
+expects you to enter them in decimal degrees.
+(The latitudes and longitudes in the GNIS file are in degrees-minutes-seconds format, followed
+by 'N', 'S', 'E', or 'W'.  However, there are two available file formats, and one of the formats
+also contains the latitudes/longitudes in decimal degrees.)
+Typical usage is as follows:
+.TP
+gunzip -c california.gz | llsearch 33 -118 34 -117 > gnis_santa_ana_west
+.PP
+If you enter the "-L" option, the program will print some license information and exit.
+.PP
+Once you have reduced the data to some subset of interest, you can search for
+particular items via the
+.I grep
+or
+.I perl
+commands, or other search commands,
+or you can simply edit the results with your favorite text editor.
+Search commands are useful in reducing the sheer volume of data to
+a more manageable size (by extracting, say, all mountain summits or all
+streams), but you will probably ultimately end up looking through the remaining
+data manually.  The individual records contain codes, such as "ppl" for
+populated places, and "summit" for mountain tops, that can help you pick
+and choose.
+.PP
+There is considerable
+redundancy in place names, and human intelligence is useful in sorting
+things out.  While I was writing
+.I drawmap
+and
+.I llsearch,
+I frequently gazed out my office window, where I could spot at least
+two, and possibly three Baldy Mountains.  There are also quite a
+few Beaver Creeks, Bear Canyons, Saddle Buttes, and Springfields out there.
+By taking a close look at the information associated with each place name,
+you can find the particular locations that interest you.
+.SH SEE ALSO
+.I drawmap(1)
+\" =========================================================================
+\" llsearch.1 - The manual page for the llsearch program.
+\" Copyright (c) 1997,1998,1999,2000,2001  Fred M. Erickson
+\"
+\" This program is free software; you can redistribute it and/or modify
+\" it under the terms of the GNU General Public License as published by
+\" the Free Software Foundation; either version 2, or (at your option)
+\" any later version.
+\"
+\" This program is distributed in the hope that it will be useful,
+\" but WITHOUT ANY WARRANTY; without even the implied warranty of
+\" MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+\" GNU General Public License for more details.
+\"
+\" You should have received a copy of the GNU General Public License
+\" along with this program; if not, write to the Free Software
+\" Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+\" =========================================================================

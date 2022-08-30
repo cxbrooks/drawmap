@@ -1,0 +1,104 @@
+.TH UNBLOCK_DEM 1 "Jul 24, 2001" \" -*- nroff -*-
+.SH NAME
+unblock_dem \- Insert linefeeds into a Digital Elevation Model (DEM) file
+.SH SYNOPSIS
+.B unblock_dem
+[-L]
+
+.SH DESCRIPTION
+The
+.I drawmap
+program processes USGS Digital Elevation Model (DEM) files
+(along with other types of files) to produce customized maps.
+.I Drawmap
+is able to read these files in their native format.
+However, since the files usually don't contain any linefeeds, they
+are difficult for a human to read.
+.I Unblock_dem
+filters a DEM file and inserts linefeeds for human readability.
+It takes input from the standard input and writes to the standard output.
+The input data must be in uncompressed form, not in gzip-compressed form.
+Also,
+.I unblock_dem
+does not work with SDTS DEM files or GTOPO30 files.
+.PP
+.I Unblock_dem
+normally takes no options, but, if you use the "-L" option,
+the program will print out some license information and exit.
+.PP
+Some DEM files already have embedded linefeeds.
+.I Unblock_dem
+makes a feeble attempt to detect these files and abort.  If the detection fails,
+the results are likely to be garbled, so it is wise to check the format of each file first.
+The
+.I drawmap
+program, with the "-i" option, will attempt to tell you whether a file contains linefeeds or not.
+.PP
+The intended use of
+.I unblock_dem
+is simply to let you conveniently examine the files to see what is in them.
+However, if you are in the mood for adventure, or if you need to repair a
+defective file, you can use
+.I unblock_dem
+to make the file easy to edit, then you can edit the file as desired.
+.I Drawmap
+can still process the files after linefeeds are inserted, but will become
+confused if any line (including the linefeed) is more than 1024 characters
+long.
+.I Drawmap
+may also become confused if you make any significant changes to the
+format of the file.
+.PP
+You may be able to use this capability to repair faulty data.  However, you
+need to be familiar with the content and structure of DEM files in order
+to do this effectively.  You also need to remember that
+.I drawmap
+depends on DEM files having a predictable structure, and it won't
+properly parse files that violate this predictability.
+Do this sort of thing only if you know what you are doing,
+or if you have a lot of free time on your hands.
+.PP
+It should be noted that you can obtain a similar effect by using
+the command recommended by the USGS:
+.PP
+dd if=inputfilename of=outputfilename ibs=4096 cbs=1024 conv=unblock
+.PP
+I prefer the
+.I unblock_dem
+command because it simply replaces the last byte of each record with
+a linefeed.  This lets me easily tell how long the original records were.
+The effect of
+.I unblock_dem
+or
+.I dd
+can be undone by typing:
+.PP
+dd if=inputfilename of=outputfilename ibs=4096 cbs=1024 conv=block
+.PP
+You may come across files that have a linefeed in the 1025th byte.
+Drawmap doesn't like these, both because it can't tell (within the space
+of the first 1024-byte record) whether the file contains linefeeds
+or not, and because the records exceed the maximum record length of 1024 bytes.
+You may be able to repair such files by blocking them with the above
+.I dd
+command.
+.SH SEE ALSO
+.I unblock_dlg(1), drawmap(1)
+\" =========================================================================
+\" unblock_dem.1 - The manual page for the unblock_dem program.
+\" Copyright (c) 2000,2001  Fred M. Erickson
+\"
+\" This program is free software; you can redistribute it and/or modify
+\" it under the terms of the GNU General Public License as published by
+\" the Free Software Foundation; either version 2, or (at your option)
+\" any later version.
+\"
+\" This program is distributed in the hope that it will be useful,
+\" but WITHOUT ANY WARRANTY; without even the implied warranty of
+\" MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+\" GNU General Public License for more details.
+\"
+\" You should have received a copy of the GNU General Public License
+\" along with this program; if not, write to the Free Software
+\" Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+\" =========================================================================
