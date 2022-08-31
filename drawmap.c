@@ -2496,6 +2496,56 @@ main(int argc, char *argv[])
 					continue;
 				}
 			}
+			else if ((tok_ptr = strstr(buf, "|")) != (char *)0)  {
+                                 /* Newer-style record. Get the lat from field 8. */
+                                 /* FEATURE_ID|FEATURE_NAME|FEATURE_CLASS|STATE_ALPHA|STATE_NUMERIC|COUNTY_NAME|COUNTY_NUMERIC|PRIMARY_LAT_DMS|PRIM_LONG_DMS|PRIM_LAT_DEC|PRIM_LONG_DEC|SOURCE_LAT_DMS|SOURCE_LONG_DMS|SOURCE_LAT_DEC|SOURCE_LONG_DEC|ELEV_IN_M|ELEV_IN_FT|MAP_NAME|DATE_CREATED|DATE_EDITED */
+                                 /* 794295|Blue Mountain Saddle|Locale|MT|30|Missoula|063|464828N|1141305W|46.8077009|-114.2181696|||||1723|5653|Blue Mountain|12/01/1991|*/
+				if ((tok_ptr + 1) < (buf + ret_val))  {
+					tok_ptr += 1;
+					gnis_feature_name = tok_ptr;
+				}
+				else  {
+					fprintf(stderr, "Defective newer-style GNIS record (end of line reached early?):  <%s>\n", buf);
+					continue;
+				}
+				for (i = 0; i < 8; i++)  {
+					if (((tok_ptr = strstr(tok_ptr, "|")) != (char *)0) && (*tok_ptr != '\0'))  {
+						if (i == 1)  {
+							/*
+							 * Capture the feature name for later use.
+							 * Skip over the state name at the front.
+							 */
+							length = tok_ptr - gnis_feature_name;
+						}
+						if ((tok_ptr + 1) < (buf + ret_val))  {
+							tok_ptr += 1;
+						}
+						else  {
+							break;
+						}
+					}
+					else  {
+						break;
+					}
+				}
+				if (i != 8)  {
+					/*
+					 * If i != 8, then we ran out of data before finding
+					 * the latitude.  Skip the record.
+					 */
+					fprintf(stderr, "Defective newer-style GNIS record (ran out of data before finding the latitude at record 8):  <%s>\n", buf);
+					continue;
+				}
+				latitude = atof(tok_ptr);
+				if (((tok_ptr = strstr(tok_ptr, "|")) != (char *)0) && (*tok_ptr != '\0') && (*(tok_ptr + 1) != '\0'))  {
+					tok_ptr += 1;
+					longitude = atof(tok_ptr);
+				}
+				else  {
+					fprintf(stderr, "Defective newer-style GNIS record (could not find longitude):  <%s>\n", buf);
+					continue;
+				}
+			}
 			else  {
 				/* Old-style record. */
 				if (ret_val < 96)  {
