@@ -1,4 +1,37 @@
+Drawmap is a tool that reads Graphical Information Systems (GIS)
+Digital Line Graphs and produces images.
 
+It was created by Fred M. Erickson and released under GNU GPL 2, 
+see LICENSE.
+
+The drawmap-2.6 sources were downloaded from
+http://www.ibiblio.org/pub/Linux/science/cartography/
+and checked in to git https://github.com/cxbrooks/drawmap
+
+Usage:
+1. Download DLG files by using EarthExplorer (https://earthexplorer.usgs.gov/)
+Further details:
+  https://doi.org/10.5066/P9LVXWFR - Digital Line Graphs (DLGs) - Large Scale
+  https://doi.org/10.5066/F7RN369N - Digital Line Graphs (DLGs) - Intermediate Scale
+  
+2. Uncompress the dlg file in a dlg directory
+
+3. drawmap produces .sun raster images, so install netpbm:
+  sudo port install netpbm
+  
+4. Run drawmap.  Here, I specify the latitude and longitude of Gerlach, NV
+ ./drawmap   -l 40.5,-119,41.0,-120.0 ../../dlg/*.DDF
+ 
+5. Convert the output:
+ rasttopnm drawmap.sun | pamtopng > drawmap.png
+ 
+
+Drawmap is
+ 
+Copyright (c) 1997,1998,1999,2000,2001,2008  Fred M. Erickson
+
+Original README below here
+------
 Some notes on drawmap.  Updated on July 10, 2008.
 
 First, how to build it.  Edit the Makefile if you want a copyright
