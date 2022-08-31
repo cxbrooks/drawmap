@@ -1,0 +1,5 @@
+2022-08-30  Christopher Brooks  <cxh@ealmac23.local>
+
+	* drawmap.c, llsearch.c: handle new format GNIS files
+	* README: Describe history and usage
+
